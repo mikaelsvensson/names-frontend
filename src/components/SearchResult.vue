@@ -5,17 +5,13 @@
       v-model="searchText"
     >
     <div class="searchResult">
-      <ul
+      <div
         v-for="item in searchResult"
         :key="item.id"
       >
-        <li>
-          {{ item.name }}
-          <span
-            v-if="item.count"
-            class="count"
-          >
-            {{ item.count }} st
+        <div class="search-result-item">
+          <span class="name">
+            {{ item.name }}
           </span>
           <span
             v-if="item.male"
@@ -28,31 +24,25 @@
           <button
             @click="vote(item.id, 'UP')"
             type="button"
+            :class="buttonClass(item.id, 'UP')"
           >
-            <span
-              class="vote-cast-yes"
-              v-if="hasVoteType(item.id, 'UP')"
-            >👍</span>
-            <span
-              class="vote-cast-no"
-              v-else
-            >👍</span>
+            👍
           </button>
           <button
             @click="vote(item.id, 'DOWN')"
             type="button"
+            :class="buttonClass(item.id, 'DOWN')"
           >
-            <span
-              class="vote-cast-yes"
-              v-if="hasVoteType(item.id, 'DOWN')"
-            >👎</span>
-            <span
-              class="vote-cast-no"
-              v-else
-            >👎</span>
+            👎
           </button>
-        </li>
-      </ul>
+          <span
+            v-if="item.count"
+            class="count"
+          >
+            {{ item.count }} st
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -111,6 +101,12 @@ export default {
     },
     hasVoteType: function (id, voteType) {
       return this.userVotes.some(vote => vote.nameId === id && vote.voteType === voteType)
+    },
+    buttonClass: function (id, voteType) {
+      return [
+        this.userVotes.some(vote => vote.nameId === id && vote.voteType === voteType) ? 'vote-cast-yes' : 'vote-cast-no',
+        'vote-type-'+voteType.toLowerCase()
+      ]
     }
   },
   mounted() {
@@ -140,10 +136,6 @@ export default {
 </script>
 
 <style scoped>
-    .count {
-        font-style: italic;
-      font-size: 80%;
-    }
     .icon-male {
         color: blue;
     }
@@ -152,20 +144,42 @@ export default {
         color: deeppink;
     }
 
-    .vote-cast-yes {
-        background: green;
+    .vote-cast-yes.vote-type-up {
+        background: lightgreen;
+    }
+
+    .vote-cast-yes.vote-type-down {
+        background: lightpink;
     }
 
     .vote-cast-no {
         background: transparent;
     }
 
-    button span {
-        padding: 0.5em;
+    div.search-result-item {
+      padding: 0.5em 0;
+    }
+
+    div.search-result-item:hover {
+      background-color: #eeeeee;
+    }
+
+    span.name {
+      display: inline-block;
+      width: 15em;
+    }
+
+    span.count {
+      margin-left: 1em;
+      display: inline-block;
+      width: 5em;
+      font-style: italic;
+      font-size: 80%;
     }
 
     button {
-        margin: 0;
-        padding: 0;
+        margin: 0 0.2em;
+        padding: 0.5em 0.8em;
+        border: 1px solid #cccccc;
     }
 </style>
