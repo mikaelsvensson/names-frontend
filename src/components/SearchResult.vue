@@ -1,18 +1,21 @@
 <template>
-  <div>
-    <input
-      type="text"
-      v-model="searchText"
-    >
-    <div class="searchResult">
+  <section>
+    <b-field>
+      <b-input
+        v-model="searchText"
+        placeholder="Sök efter namn..."
+        size="is-medium"
+      />
+    </b-field>
+    <div class="search-result-list">
       <div
         v-for="item in searchResult"
         :key="item.id"
+        class="search-result-item"
       >
-        <div class="search-result-item">
-          <span class="name">
-            {{ item.name }}
-          </span>
+        <div class="name">
+          {{ item.name }}
+
           <span
             v-if="item.male"
             class="icon-male"
@@ -21,20 +24,28 @@
             v-if="item.female"
             class="icon-female"
           >♀</span>
-          <button
-            @click="vote(item.id, 'UP')"
-            type="button"
-            :class="buttonClass(item.id, 'UP')"
-          >
-            👍
-          </button>
-          <button
-            @click="vote(item.id, 'DOWN')"
-            type="button"
-            :class="buttonClass(item.id, 'DOWN')"
-          >
-            👎
-          </button>
+        </div>
+        <div class="vote-buttons">
+          <div class="buttons">
+            <b-button
+              type="is-light"
+              @click="vote(item.id, 'UP')"
+            >
+              <span class="icon is-small">
+                <font-awesome-icon :icon="[hasVoteType(item.id, 'UP') ? 'fa' : 'far', 'thumbs-up']" />
+              </span>
+            </b-button>
+            <b-button
+              type="is-light"
+              @click="vote(item.id, 'DOWN')"
+            >
+              <span class="icon is-small">
+                <font-awesome-icon :icon="[hasVoteType(item.id, 'DOWN') ? 'fa' : 'far', 'thumbs-down']" />
+              </span>
+            </b-button>
+          </div>
+        </div>
+        <div class="popularity">
           <span
             v-if="item.count"
             class="count"
@@ -44,7 +55,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -105,7 +116,7 @@ export default {
     buttonClass: function (id, voteType) {
       return [
         this.userVotes.some(vote => vote.nameId === id && vote.voteType === voteType) ? 'vote-cast-yes' : 'vote-cast-no',
-        'vote-type-'+voteType.toLowerCase()
+        'vote-type-' + voteType.toLowerCase()
       ]
     }
   },
@@ -135,51 +146,46 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    .search-result-list {
+    }
+
+    div.search-result-item {
+        display: flex;
+        padding: 0.5em 0;
+        align-items: center;
+
+        div {
+            flex: 0;
+        }
+
+        div.name {
+            flex: 1;
+        }
+
+        div.popularity {
+            flex-basis: 4em;
+            text-align: right;
+        }
+
+        div.vote-buttons {
+            div.buttons {
+                flex-wrap: unset;
+            }
+        }
+    }
+
     .icon-male {
         color: blue;
+        padding-left: 1rem;
     }
 
     .icon-female {
         color: deeppink;
-    }
-
-    .vote-cast-yes.vote-type-up {
-        background: lightgreen;
-    }
-
-    .vote-cast-yes.vote-type-down {
-        background: lightpink;
-    }
-
-    .vote-cast-no {
-        background: transparent;
-    }
-
-    div.search-result-item {
-      padding: 0.5em 0;
-    }
-
-    div.search-result-item:hover {
-      background-color: #eeeeee;
-    }
-
-    span.name {
-      display: inline-block;
-      width: 15em;
+        padding-left: 1rem;
     }
 
     span.count {
-      margin-left: 1em;
-      display: inline-block;
-      width: 5em;
-      font-style: italic;
-      font-size: 80%;
-    }
-
-    button {
-        margin: 0 0.2em;
-        padding: 0.5em 0.8em;
-        border: 1px solid #cccccc;
+        font-style: italic;
     }
 </style>

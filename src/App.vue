@@ -1,7 +1,11 @@
 <template>
-  <div id="app">
-    <SearchResult />
-  </div>
+  <section class="mx-4 my-4">
+    <div class="columns is-centered">
+      <div class="column is-half-tablet is-one-third-desktop">
+        <SearchResult />
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -16,7 +20,5 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: sans-serif;
-}
+
 </style>
