@@ -15,7 +15,7 @@ export default {
             if (existingUserId) {
                 return existingUserId
             }
-            const userResponse = await fetch('http://localhost:8080/users', {method: 'POST', mode: 'cors'});
+            const userResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users`, {method: 'POST', mode: 'cors'});
             const user = await userResponse.json();
             window.localStorage.setItem('user.id', user.id);
             return user.id

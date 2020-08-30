@@ -97,14 +97,14 @@ export default {
   methods: {
     search: async function (value) {
       const userId = await this.getUserId();
-      const namesResponse = await fetch(`http://localhost:8080/users/${userId}/names?name-prefix=${value}`, {mode: 'cors'})
+      const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?name-prefix=${value}`, {mode: 'cors'})
       const names = await namesResponse.json()
       this.searchResult = names.names
     },
     addName: async function () {
       try {
         const userId = await this.getUserId();
-        const createNameResp = await fetch(`http://localhost:8080/users/${userId}/names`, {
+        const createNameResp = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names`, {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -129,7 +129,7 @@ export default {
     vote: async function (id, voteType) {
       try {
         const userId = await this.getUserId();
-        const voteResponse = await fetch(`http://localhost:8080/users/${userId}/votes/${id}`, {
+        const voteResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/votes/${id}`, {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -172,7 +172,7 @@ export default {
   async created() {
     try {
       const userId = await this.getUserId();
-      const votesResponse = await fetch(`http://localhost:8080/users/${userId}/votes`, {mode: 'cors'})
+      const votesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/votes`, {mode: 'cors'})
       if (votesResponse.ok) {
         this.userVotes = await votesResponse.json()
       } else {
