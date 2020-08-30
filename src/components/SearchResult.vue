@@ -9,6 +9,18 @@
     </b-field>
     <div class="search-result-list">
       <div
+        v-if="searchResult.length === 0 && searchText !== ''"
+        class="content"
+      >
+        <p>
+          Det var ett ovanligt namn.
+        </p>
+        <p>
+          <a @click.prevent="addName">Spara {{ searchText }} som ett namn du gillar</a>. Bara du och din
+          partner kommer se detta namn.
+        </p>
+      </div>
+      <div
         v-for="item in searchResult"
         :key="item.id"
         class="search-result-item"
@@ -17,13 +29,20 @@
           {{ item.name }}
 
           <span
-            v-if="item.male"
+            v-if="item.male && !item.female"
             class="icon-male"
+            title="Över 90 % av personerna med detta namn är män."
           >♂</span>
           <span
-            v-if="item.female"
+            v-if="item.female && !item.male"
+            title="Över 90 % av personerna med detta namn är kvinnor."
             class="icon-female"
           >♀</span>
+          <span
+            v-if="item.female && item.male"
+            title="Namnet bärs av både kvinnor och män."
+            class="icon-unisex"
+          >⚤</span>
         </div>
         <div class="vote-buttons">
           <div class="buttons">
@@ -45,6 +64,7 @@
             </b-button>
           </div>
         </div>
+        <!--
         <div class="popularity">
           <span
             v-if="item.count"
@@ -53,6 +73,7 @@
             {{ item.count }} st
           </span>
         </div>
+        -->
       </div>
     </div>
   </section>
@@ -75,10 +96,35 @@ export default {
   ],
   methods: {
     search: async function (value) {
-      console.log(value)
-      const namesResponse = await fetch(`http://localhost:8080/names?name-prefix=${value}`, {mode: 'cors'})
+      const userId = await this.getUserId();
+      const namesResponse = await fetch(`http://localhost:8080/users/${userId}/names?name-prefix=${value}`, {mode: 'cors'})
       const names = await namesResponse.json()
       this.searchResult = names.names
+    },
+    addName: async function () {
+      try {
+        const userId = await this.getUserId();
+        const createNameResp = await fetch(`http://localhost:8080/users/${userId}/names`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: this.searchText
+          })
+        })
+        if (createNameResp.ok) {
+          const newName = await createNameResp.json()
+          await this.vote(newName.id, 'UP')
+          this.searchResult.push(newName)
+        } else {
+          console.log('💥 Failed to create name')
+        }
+      } catch (e) {
+        console.log('💥', e)
+      }
+
     },
     vote: async function (id, voteType) {
       try {
@@ -147,45 +193,50 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .search-result-list {
+  .search-result-list {
+  }
+
+  div.search-result-item {
+    display: flex;
+    padding: 0.5em 0;
+    align-items: center;
+
+    div {
+      flex: 0;
     }
 
-    div.search-result-item {
-        display: flex;
-        padding: 0.5em 0;
-        align-items: center;
-
-        div {
-            flex: 0;
-        }
-
-        div.name {
-            flex: 1;
-        }
-
-        div.popularity {
-            flex-basis: 4em;
-            text-align: right;
-        }
-
-        div.vote-buttons {
-            div.buttons {
-                flex-wrap: unset;
-            }
-        }
+    div.name {
+      flex: 1;
     }
 
-    .icon-male {
-        color: blue;
-        padding-left: 1rem;
+    div.popularity {
+      flex-basis: 4em;
+      text-align: right;
     }
 
-    .icon-female {
-        color: deeppink;
-        padding-left: 1rem;
+    div.vote-buttons {
+      div.buttons {
+        flex-wrap: unset;
+      }
     }
+  }
 
-    span.count {
-        font-style: italic;
-    }
+  .icon-male {
+    color: blue;
+    padding-left: 1rem;
+  }
+
+  .icon-female {
+    color: deeppink;
+    padding-left: 1rem;
+  }
+
+  .icon-unisex {
+    color: mediumpurple;
+    padding-left: 1rem;
+  }
+
+  span.count {
+    font-style: italic;
+  }
 </style>
