@@ -1,82 +1,94 @@
 <template>
-  <section>
-    <b-field>
-      <b-input
-        v-model="searchText"
-        placeholder="Sök efter namn..."
-        size="is-medium"
-      />
-    </b-field>
-    <div class="search-result-list">
-      <div
-        v-if="searchResult.length === 0 && searchText !== ''"
-        class="content"
-      >
+  <div>
+    <section>
+      <div class="content">
+        <h1>
+          Upptäck namn
+        </h1>
         <p>
-          Det var ett ovanligt namn.
-        </p>
-        <p>
-          <a @click.prevent="addName">Spara {{ searchText }} som ett namn du gillar</a>. Bara du och din
-          partner kommer se detta namn.
+          Här kan du söka efter namn.
         </p>
       </div>
-      <div
-        v-for="item in searchResult"
-        :key="item.id"
-        class="search-result-item"
-      >
-        <div class="name">
-          {{ item.name }}
+    </section>
+    <section>
+      <b-field>
+        <b-input
+          v-model="searchText"
+          placeholder="Sök efter namn..."
+          size="is-medium"
+        />
+      </b-field>
+      <div class="search-result-list">
+        <div
+          v-if="searchResult.length === 0 && searchText !== ''"
+          class="content"
+        >
+          <p>
+            Det var ett ovanligt namn.
+          </p>
+          <p>
+            <a @click.prevent="addName">Spara {{ searchText }} som ett namn du gillar</a>. Bara du och din
+            partner kommer se detta namn.
+          </p>
+        </div>
+        <div
+          v-for="item in searchResult"
+          :key="item.id"
+          class="search-result-item"
+        >
+          <div class="name">
+            {{ item.name }}
 
-          <span
-            v-if="item.male && !item.female"
-            class="icon-male"
-            title="Över 90 % av personerna med detta namn är män."
-          >♂</span>
-          <span
-            v-if="item.female && !item.male"
-            title="Över 90 % av personerna med detta namn är kvinnor."
-            class="icon-female"
-          >♀</span>
-          <span
-            v-if="item.female && item.male"
-            title="Namnet bärs av både kvinnor och män."
-            class="icon-unisex"
-          >⚤</span>
-        </div>
-        <div class="vote-buttons">
-          <div class="buttons">
-            <b-button
-              type="is-light"
-              @click="vote(item.id, 'UP')"
-            >
-              <span class="icon is-small">
-                <font-awesome-icon :icon="[hasVoteType(item.id, 'UP') ? 'fa' : 'far', 'thumbs-up']" />
-              </span>
-            </b-button>
-            <b-button
-              type="is-light"
-              @click="vote(item.id, 'DOWN')"
-            >
-              <span class="icon is-small">
-                <font-awesome-icon :icon="[hasVoteType(item.id, 'DOWN') ? 'fa' : 'far', 'thumbs-down']" />
-              </span>
-            </b-button>
+            <span
+              v-if="item.male && !item.female"
+              class="icon-male"
+              title="Över 90 % av personerna med detta namn är män."
+            >♂</span>
+            <span
+              v-if="item.female && !item.male"
+              title="Över 90 % av personerna med detta namn är kvinnor."
+              class="icon-female"
+            >♀</span>
+            <span
+              v-if="item.female && item.male"
+              title="Namnet bärs av både kvinnor och män."
+              class="icon-unisex"
+            >⚤</span>
           </div>
+          <div class="vote-buttons">
+            <div class="buttons">
+              <b-button
+                type="is-light"
+                @click="vote(item.id, 'UP')"
+              >
+                <span class="icon is-small">
+                  <font-awesome-icon :icon="[hasVoteType(item.id, 'UP') ? 'fa' : 'far', 'thumbs-up']" />
+                </span>
+              </b-button>
+              <b-button
+                type="is-light"
+                @click="vote(item.id, 'DOWN')"
+              >
+                <span class="icon is-small">
+                  <font-awesome-icon :icon="[hasVoteType(item.id, 'DOWN') ? 'fa' : 'far', 'thumbs-down']" />
+                </span>
+              </b-button>
+            </div>
+          </div>
+          <!--
+          <div class="popularity">
+            <span
+              v-if="item.count"
+              class="count"
+            >
+              {{ item.count }} st
+            </span>
+          </div>
+          -->
         </div>
-        <!--
-        <div class="popularity">
-          <span
-            v-if="item.count"
-            class="count"
-          >
-            {{ item.count }} st
-          </span>
-        </div>
-        -->
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
 
 <script>
