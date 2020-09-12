@@ -1,34 +1,41 @@
 // Import Bulma's core
 @import "~bulma/sass/utilities/_all";
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chewy&family=Quattrocento:wght@400;700&display=swap');
 
 
-$family-primary: 'Cormorant Garamond', $family-sans-serif;
+$family-primary: 'Quattrocento', $family-sans-serif;
 
 // Set your colors
-//$primary: red;
-//$primary-invert: findColorInvert($primary);
-//$twitter: #4099FF;
-//$twitter-invert: findColorInvert($twitter);
+$primary: #ffeaaf;
+$primary-invert: findColorInvert($primary);
+
+$success: #d1ffb5;
+$success-invert: findColorInvert($success);
+
+$twitter: #4099FF;
+$twitter-invert: findColorInvert($twitter);
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
-//$colors: (
-//        "white": ($white, $black),
-//        "black": ($black, $white),
-//        "light": ($light, $light-invert),
-//        "dark": ($dark, $dark-invert),
-//        "primary": ($primary, $primary-invert),
-//        "info": ($info, $info-invert),
-//        "success": ($success, $success-invert),
-//        "warning": ($warning, $warning-invert),
-//        "danger": ($danger, $danger-invert),
-//        "twitter": ($twitter, $twitter-invert)
-//);
+$colors: (
+        "white": ($white, $black),
+        "black": ($black, $white),
+        "light": ($light, $light-invert),
+        "dark": ($dark, $dark-invert),
+        "primary": ($primary, $primary-invert),
+        "info": ($info, $info-invert),
+        "success": ($success, $success-invert),
+        "warning": ($warning, $warning-invert),
+        "danger": ($danger, $danger-invert),
+        "twitter": ($twitter, $twitter-invert)
+);
 
+$box-background-color: findLightColor($primary);
 // Links
-//$link: $primary;
-//$link-invert: $primary-invert;
+$link: #175fb1;
+$link-invert: findColorInvert($link);
 //$link-focus-border: $primary;
+
+$navbar-item-color: $link;
 
 // Import Bulma and Buefy styles
 @import "~bulma";

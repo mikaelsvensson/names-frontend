@@ -1,24 +1,70 @@
 <template>
-  <section class="mx-4 my-4">
-    <div class="columns is-centered">
-      <div class="column is-half-tablet is-one-third-desktop">
-        <SearchResult />
+    <section class="mx-4 my-4">
+      <div class="columns is-centered">
+        <div class="column is-half-tablet is-one-third-desktop">
+      <b-navbar :mobile-burger="false">
+        <template slot="brand">
+          <b-navbar-item tag="router-link" :to="{ path: '/' }">
+            Hem
+          </b-navbar-item>
+          <b-navbar-item href="#/explore">
+            Upptäck
+          </b-navbar-item>
+          <b-navbar-item href="#/share">
+            Dela
+          </b-navbar-item>
+          <b-navbar-item href="#/favourites">
+            Favoriter
+          </b-navbar-item>
+        </template>
+
+<!--
+        <template slot="start">
+          <b-navbar-dropdown label="Info">
+            <b-navbar-item href="#">
+              About
+            </b-navbar-item>
+            <b-navbar-item href="#">
+              Contact
+            </b-navbar-item>
+          </b-navbar-dropdown>
+        </template>
+-->
+<!--
+        <template slot="end">
+          <b-navbar-item tag="div">
+            <div class="buttons">
+              <a class="button is-primary">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light">
+                Log in
+              </a>
+            </div>
+          </b-navbar-item>
+        </template>
+-->
+      </b-navbar>
+            <router-view></router-view>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 </template>
 
 <script>
-import SearchResult from "@/components/SearchResult";
-
 export default {
   name: 'App',
   components: {
-    SearchResult
   }
 }
 </script>
 
-<style>
-
+<style lang="scss">
+  nav {
+    .navbar-brand > .navbar-item {
+      font-family: 'Chewy';
+      font-size: 1.5em;
+      padding-left: 0;
+    }
+  }
 </style>
