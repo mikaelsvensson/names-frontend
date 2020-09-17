@@ -40,17 +40,17 @@
             {{ item.name }}
 
             <span
-              v-if="item.male && !item.female"
+              v-if="getGender(item) === 'MALE'"
               class="icon-male"
               title="Över 90 % av personerna med detta namn är män."
             >♂</span>
             <span
-              v-if="item.female && !item.male"
+              v-if="getGender(item) === 'FEMALE'"
               title="Över 90 % av personerna med detta namn är kvinnor."
               class="icon-female"
             >♀</span>
             <span
-              v-if="item.female && item.male"
+              v-if="getGender(item) === 'UNISEX'"
               title="Namnet bärs av både kvinnor och män."
               class="icon-unisex"
             >⚤</span>
@@ -59,18 +59,26 @@
             <div class="buttons">
               <b-button
                 type="is-light"
-                @click="vote(item.id, 'UP')"
+                @click="vote(item.id, 100)"
               >
                 <span class="icon is-small">
-                  <font-awesome-icon :icon="[hasVoteType(item.id, 'UP') ? 'fa' : 'far', 'thumbs-up']" />
+                  <font-awesome-icon :style="{ color: 'green' }" :icon="[getVoteValue(item.id) === 100 ? 'fa' : 'far', 'smile']" />
                 </span>
               </b-button>
               <b-button
                 type="is-light"
-                @click="vote(item.id, 'DOWN')"
+                @click="vote(item.id, 0)"
               >
                 <span class="icon is-small">
-                  <font-awesome-icon :icon="[hasVoteType(item.id, 'DOWN') ? 'fa' : 'far', 'thumbs-down']" />
+                  <font-awesome-icon :style="{ color: 'orange' }" :icon="[getVoteValue(item.id) === 0 ? 'fa' : 'far', 'meh']" />
+                </span>
+              </b-button>
+              <b-button
+                type="is-light"
+                @click="vote(item.id, -100)"
+              >
+                <span class="icon is-small">
+                  <font-awesome-icon :style="{ color: 'red' }" :icon="[getVoteValue(item.id) === -100 ? 'fa' : 'far', 'frown']" />
                 </span>
               </b-button>
             </div>
@@ -113,6 +121,16 @@ export default {
       const names = await namesResponse.json()
       this.searchResult = names.names
     },
+    getGender: function (item) {
+      const ratioWomen = item.attributes.find(attr => attr.key === 'SCB_PERCENT_WOMEN')?.value;
+      return typeof ratioWomen !== 'undefined'
+        ? (ratioWomen > 0.9
+          ? 'FEMALE'
+          : (ratioWomen < 0.1
+            ? 'MALE'
+            : 'UNISEX'))
+        : null
+    },
     addName: async function () {
       try {
         const userId = await this.getUserId();
@@ -128,7 +146,7 @@ export default {
         })
         if (createNameResp.ok) {
           const newName = await createNameResp.json()
-          await this.vote(newName.id, 'UP')
+          await this.vote(newName.id, 100)
           this.searchResult.push(newName)
         } else {
           console.log('💥 Failed to create name')
@@ -138,7 +156,7 @@ export default {
       }
 
     },
-    vote: async function (id, voteType) {
+    vote: async function (id, value) {
       try {
         const userId = await this.getUserId();
         const voteResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/votes/${id}`, {
@@ -147,18 +165,17 @@ export default {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({voteType: voteType})
+          body: JSON.stringify({value})
         })
         if (voteResponse.ok) {
           const userVote = this.userVotes.find(vote => vote.nameId === id);
           if (userVote) {
-            userVote.voteType = voteType
+            userVote.value = value
           } else {
             this.userVotes.push({
               nameId: id,
               userId: null,
-              voteStrength: 0,
-              voteType: voteType
+              value
             })
           }
         } else {
@@ -168,14 +185,8 @@ export default {
         console.log('💥', e)
       }
     },
-    hasVoteType: function (id, voteType) {
-      return this.userVotes.some(vote => vote.nameId === id && vote.voteType === voteType)
-    },
-    buttonClass: function (id, voteType) {
-      return [
-        this.userVotes.some(vote => vote.nameId === id && vote.voteType === voteType) ? 'vote-cast-yes' : 'vote-cast-no',
-        'vote-type-' + voteType.toLowerCase()
-      ]
+    getVoteValue: function (id) {
+      return this.userVotes.find(vote => vote.nameId === id)?.value;
     }
   },
   mounted() {

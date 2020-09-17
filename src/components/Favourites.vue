@@ -49,17 +49,22 @@
             <span class="icon is-small">
               <!-- User's vote -->
               <font-awesome-icon
-                v-if="item.votes.you === 'UP'"
+                v-if="item.votes.you === 100"
                 :style="{ color: 'green' }"
-                :icon="[ 'far', 'thumbs-up']"
+                :icon="[ 'far', 'smile']"
               />
               <font-awesome-icon
-                v-if="item.votes.you === 'DOWN'"
+                v-if="item.votes.you === 0"
+                :style="{ color: 'orange' }"
+                :icon="[ 'far', 'meh']"
+              />
+              <font-awesome-icon
+                v-if="item.votes.you === -100"
                 :style="{ color: 'red' }"
-                :icon="[ 'far', 'thumbs-down']"
+                :icon="[ 'far', 'frown']"
               />
               <font-awesome-icon
-                v-if="!item.votes.you"
+                v-if="typeof item.votes.you === 'undefined'"
                 :style="{ color: '#ccc' }"
                 :icon="[ 'fa', 'question']"
               />
@@ -71,17 +76,22 @@
             <span class="icon is-small">
               <!-- Partner's vote -->
               <font-awesome-icon
-                v-if="item.votes.partner === 'UP'"
+                v-if="item.votes.partner === 100"
                 :style="{ color: 'green' }"
-                :icon="[ 'far', 'thumbs-up']"
+                :icon="[ 'far', 'smile']"
               />
               <font-awesome-icon
-                v-if="item.votes.partner === 'DOWN'"
+                v-if="item.votes.partner === 0"
+                :style="{ color: 'orange' }"
+                :icon="[ 'far', 'meh']"
+              />
+              <font-awesome-icon
+                v-if="item.votes.partner === -100"
                 :style="{ color: 'red' }"
-                :icon="[ 'far', 'thumbs-down']"
+                :icon="[ 'far', 'frown']"
               />
               <font-awesome-icon
-                v-if="!item.votes.partner"
+                v-if="typeof item.votes.partner === 'undefined'"
                 :style="{ color: '#ccc' }"
                 :icon="[ 'fa', 'question']"
               />
@@ -115,11 +125,9 @@ export default {
 
       const relationshipsResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/relationships`, {mode: 'cors'})
 
-      let items = await relationshipsResponse.json();
+      const items = await relationshipsResponse.json();
       const relatedUserIds = items.map(item => item.id)
       const userIds = [userId].concat(relatedUserIds)
-
-      // console.log('👻', userIds, relatedUserIds)
 
       const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?voted-by=${userIds.join(',')}`, {mode: 'cors'})
 
@@ -131,18 +139,13 @@ export default {
         votes[id] = await votesResponse.json()
       }
 
-      // console.log('🦊 Votes', votes)
-      // console.log('🦊 Names', names)
-
       this.list = names.map(name => ({
         ...name,
         votes: {
-          you: votes[userId].find(vote => vote.nameId === name.id)?.voteType,
-          partner: Object.values(votes).flatMap(x => x).find(vote => relatedUserIds.includes(vote.userId) && name.id === vote.nameId)?.voteType
+          you: votes[userId].find(vote => vote.nameId === name.id)?.value,
+          partner: Object.values(votes).flatMap(x => x).find(vote => relatedUserIds.includes(vote.userId) && name.id === vote.nameId)?.value
         }
-      })).filter(item => item.votes.you === 'UP' ||item.votes.partner === 'UP')
-
-      // console.log('🐶', this.list)
+      })).filter(item => typeof item.votes.you !== 'undefined' || typeof item.votes.partner !== 'undefined')
     } catch (e) {
       console.log('💥', e)
       this.list = []

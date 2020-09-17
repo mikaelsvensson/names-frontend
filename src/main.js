@@ -32,10 +32,12 @@ import Favourites from "@/components/Favourites";
 
 library.add(
     faSolid.faQuestion,
-    faSolid.faThumbsUp,
-    faRegular.faThumbsUp,
-    faSolid.faThumbsDown,
-    faRegular.faThumbsDown
+    faSolid.faSmile,
+    faRegular.faSmile,
+    faSolid.faMeh,
+    faRegular.faMeh,
+    faSolid.faFrown,
+    faRegular.faFrown
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
