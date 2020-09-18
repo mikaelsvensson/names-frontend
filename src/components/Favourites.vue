@@ -22,11 +22,33 @@
         <p v-if="filterOption === 'mine'">
           Du har inte röstat på några favoriter ännu.
         </p>
-        <p v-if="filterOption === 'ours'">
-          Ni har tyvärr några gemensamma favoriter ännu.
-        </p>
-        <p v-if="filterOption === 'all'">
+        <div v-if="filterOption === 'ours' && isUserConnected" class="content">
+          <p>
+            Ni har tyvärr inte några gemensamma favoriter ännu.
+          </p>
+        </div>
+        <div v-if="filterOption === 'ours' && !isUserConnected" class="content">
+          <p>
+            Ni har inte kopplat ihop era profiler ännu.
+          </p>
+          <p>
+            Gå till <router-link to="/share">Dela</router-link> för att göra detta.
+          </p>
+        </div>
+        <div v-if="filterOption === 'all' && isUserConnected" class="content">
+          <p>
           Varken du eller din partner har röstat på några namn ännu.
+          </p>
+        </div>
+        <div v-if="filterOption === 'all' && !isUserConnected" class="content">
+          <p>
+            Du har inte röstat på namn ännu.
+          </p>
+          <p>
+            När ni kopplat ihop era profiler på <router-link to="/share">Dela</router-link>-sidan så ser du även din partners röster här.
+          </p>
+        </div>
+        <p v-if="filterOption === 'all'">
         </p>
       </div>
 
@@ -106,29 +128,29 @@
           </div>
         </div>
         <div class="vote-partner">
-            <span class="icon is-small">
-              <!-- Partner's vote -->
-              <font-awesome-icon
-                v-if="item.votes.partner === 100"
-                :style="{ color: 'green' }"
-                :icon="[ 'far', 'smile']"
-              />
-              <font-awesome-icon
-                v-if="item.votes.partner === 0"
-                :style="{ color: 'orange' }"
-                :icon="[ 'far', 'meh']"
-              />
-              <font-awesome-icon
-                v-if="item.votes.partner === -100"
-                :style="{ color: 'red' }"
-                :icon="[ 'far', 'frown']"
-              />
-              <font-awesome-icon
-                v-if="typeof item.votes.partner === 'undefined'"
-                :style="{ color: '#ccc' }"
-                :icon="[ 'fa', 'question']"
-              />
-            </span>
+          <span class="icon is-small">
+            <!-- Partner's vote -->
+            <font-awesome-icon
+              v-if="item.votes.partner === 100"
+              :style="{ color: 'green' }"
+              :icon="[ 'far', 'smile']"
+            />
+            <font-awesome-icon
+              v-if="item.votes.partner === 0"
+              :style="{ color: 'orange' }"
+              :icon="[ 'far', 'meh']"
+            />
+            <font-awesome-icon
+              v-if="item.votes.partner === -100"
+              :style="{ color: 'red' }"
+              :icon="[ 'far', 'frown']"
+            />
+            <font-awesome-icon
+              v-if="typeof item.votes.partner === 'undefined'"
+              :style="{ color: '#ccc' }"
+              :icon="[ 'fa', 'question']"
+            />
+          </span>
         </div>
       </div>
     </section>
@@ -148,7 +170,7 @@ const FILTERS = {
     filter: (item) => item.votes.you > 0 && item.votes.partner > 0
   },
   all: {
-    label: 'Även bortröstade',
+    label: 'Även nedröstade',
     filter: () => true
   }
 }
@@ -160,7 +182,8 @@ export default {
       listAll: [],
       listFiltered: [],
       filterOption: 'ours',
-      filterOptions: Object.entries(FILTERS).map(([key, {label}]) => ({key, label}))
+      filterOptions: Object.entries(FILTERS).map(([key, {label}]) => ({key, label})),
+      isUserConnected: false
     };
   },
   mixins: [
@@ -221,6 +244,8 @@ export default {
         }
       }))
         .filter(item => typeof item.votes.you !== 'undefined' || typeof item.votes.partner !== 'undefined')
+
+      this.isUserConnected = relatedUserIds.length > 0
     } catch (e) {
       console.log('💥', e)
       this.listAll = []
