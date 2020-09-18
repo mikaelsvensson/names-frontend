@@ -18,6 +18,29 @@
           size="is-medium"
         />
       </b-field>
+
+      <b-field>
+        <b-radio-button
+          v-for="item in genderOptions"
+          :key="item.key"
+          v-model="genderOption"
+          :native-value="item.key"
+        >
+          {{ item.label }}
+        </b-radio-button>
+      </b-field>
+
+      <b-field>
+        <b-radio-button
+          v-for="item in popularityOptions"
+          :key="item.key"
+          v-model="popularityOption"
+          :native-value="item.key"
+        >
+          {{ item.label }}
+        </b-radio-button>
+      </b-field>
+
       <div class="search-result-list">
         <div
           v-if="searchResult.length === 0 && searchText !== ''"
@@ -62,7 +85,10 @@
                 @click="vote(item.id, 100)"
               >
                 <span class="icon is-small">
-                  <font-awesome-icon :style="{ color: 'green' }" :icon="[getVoteValue(item.id) === 100 ? 'fa' : 'far', 'smile']" />
+                  <font-awesome-icon
+                    :style="{ color: 'green' }"
+                    :icon="[getVoteValue(item.id) === 100 ? 'fa' : 'far', 'smile']"
+                  />
                 </span>
               </b-button>
               <b-button
@@ -70,7 +96,10 @@
                 @click="vote(item.id, 0)"
               >
                 <span class="icon is-small">
-                  <font-awesome-icon :style="{ color: 'orange' }" :icon="[getVoteValue(item.id) === 0 ? 'fa' : 'far', 'meh']" />
+                  <font-awesome-icon
+                    :style="{ color: 'orange' }"
+                    :icon="[getVoteValue(item.id) === 0 ? 'fa' : 'far', 'meh']"
+                  />
                 </span>
               </b-button>
               <b-button
@@ -78,21 +107,14 @@
                 @click="vote(item.id, -100)"
               >
                 <span class="icon is-small">
-                  <font-awesome-icon :style="{ color: 'red' }" :icon="[getVoteValue(item.id) === -100 ? 'fa' : 'far', 'frown']" />
+                  <font-awesome-icon
+                    :style="{ color: 'red' }"
+                    :icon="[getVoteValue(item.id) === -100 ? 'fa' : 'far', 'frown']"
+                  />
                 </span>
               </b-button>
             </div>
           </div>
-          <!--
-          <div class="popularity">
-            <span
-              v-if="item.count"
-              class="count"
-            >
-              {{ item.count }} st
-            </span>
-          </div>
-          -->
         </div>
       </div>
     </section>
@@ -102,31 +124,81 @@
 <script>
 import ComponentMixins from "@/util/ComponentMixins";
 
+const UNISEX_THRESHOLD = 0.1
+
+const GENDER_FILTERS = {
+  all: {
+    label: 'Alla',
+    queryParam: ''
+  },
+  girls: {
+    label: 'Flicknamn',
+    queryParam: `attribute-filter=SCB_PERCENT_WOMEN:GREATER_THAN:${1 - UNISEX_THRESHOLD}`
+  },
+  boys: {
+    label: 'Pojknamn',
+    queryParam: `attribute-filter=SCB_PERCENT_WOMEN:LESS_THAN:${UNISEX_THRESHOLD}`
+  },
+  unisex: {
+    label: 'Unisex',
+    queryParam: `attribute-filter=SCB_PERCENT_WOMEN:GREATER_THAN:${UNISEX_THRESHOLD}&attribute-filter=SCB_PERCENT_WOMEN:LESS_THAN:${1 - UNISEX_THRESHOLD}`
+  }
+}
+
+const POPULARITY_FILTERS = {
+  all: {
+    label: 'Alla',
+    queryParam: ''
+  },
+  common: {
+    label: 'Vanligt',
+    queryParam: `attribute-filter=SCB_PERCENT_OF_POPULATION:GREATER_THAN:${1.0/1000}`
+  },
+  between: {
+    label: 'Varken eller',
+    queryParam: `attribute-filter=SCB_PERCENT_OF_POPULATION:GREATER_THAN:${1.0/100000}&attribute-filter=SCB_PERCENT_OF_POPULATION:LESS_THAN:${1.0/1000}`
+  },
+  uncommon: {
+    label: 'Ovanligt',
+    queryParam: `attribute-filter=SCB_PERCENT_OF_POPULATION:LESS_THAN:${1.0/100000}`
+  }
+}
+
 export default {
   name: 'SearchResult',
   data: function () {
     return {
       searchText: '',
       searchResult: [],
-      userVotes: []
+      userVotes: [],
+      genderOption: 'all',
+      genderOptions: Object.entries(GENDER_FILTERS).map(([key, {label}]) => ({key, label})),
+      popularityOption: 'all',
+      popularityOptions: Object.entries(POPULARITY_FILTERS).map(([key, {label}]) => ({key, label}))
     };
   },
   mixins: [
     ComponentMixins
   ],
   methods: {
-    search: async function (value) {
+    search: async function () {
+      const value = this.searchText
       const userId = await this.getUserId();
-      const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?name-prefix=${value}`, {mode: 'cors'})
+      const queryParams = [
+        value ? `name-prefix=${value}` : null,
+        GENDER_FILTERS[this.genderOption]?.queryParam,
+        POPULARITY_FILTERS[this.popularityOption]?.queryParam
+      ].filter(param => !!param).join('&')
+      const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?${queryParams}`, {mode: 'cors'})
       const names = await namesResponse.json()
       this.searchResult = names.names
     },
     getGender: function (item) {
       const ratioWomen = item.attributes.find(attr => attr.key === 'SCB_PERCENT_WOMEN')?.value;
       return typeof ratioWomen !== 'undefined'
-        ? (ratioWomen > 0.9
+        ? (ratioWomen > (1 - UNISEX_THRESHOLD)
           ? 'FEMALE'
-          : (ratioWomen < 0.1
+          : (ratioWomen < UNISEX_THRESHOLD
             ? 'MALE'
             : 'UNISEX'))
         : null
@@ -190,7 +262,7 @@ export default {
     }
   },
   mounted() {
-    this.search = this.debounce(this.search, 500)
+    this.onSearchTextChange = this.debounce(this.search, 500)
   },
   async created() {
     try {
@@ -208,58 +280,64 @@ export default {
     }
   },
   watch: {
-    searchText: function (value) {
-      this.search(value)
+    searchText: function (/*value*/) {
+      this.onSearchTextChange()
+    },
+    genderOption: function (/*value*/) {
+      this.search()
+    },
+    popularityOption: function (/*value*/) {
+      this.search()
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-  .search-result-list {
-  }
-
-  div.search-result-item {
-    display: flex;
-    padding: 0.5em 0;
-    align-items: center;
-
-    div {
-      flex: 0;
+    .search-result-list {
     }
 
-    div.name {
-      flex: 1;
+    div.search-result-item {
+        display: flex;
+        padding: 0.5em 0;
+        align-items: center;
+
+        div {
+            flex: 0;
+        }
+
+        div.name {
+            flex: 1;
+        }
+
+        div.popularity {
+            flex-basis: 4em;
+            text-align: right;
+        }
+
+        div.vote-buttons {
+            div.buttons {
+                flex-wrap: unset;
+            }
+        }
     }
 
-    div.popularity {
-      flex-basis: 4em;
-      text-align: right;
+    .icon-male {
+        color: blue;
+        padding-left: 1rem;
     }
 
-    div.vote-buttons {
-      div.buttons {
-        flex-wrap: unset;
-      }
+    .icon-female {
+        color: deeppink;
+        padding-left: 1rem;
     }
-  }
 
-  .icon-male {
-    color: blue;
-    padding-left: 1rem;
-  }
+    .icon-unisex {
+        color: mediumpurple;
+        padding-left: 1rem;
+    }
 
-  .icon-female {
-    color: deeppink;
-    padding-left: 1rem;
-  }
-
-  .icon-unisex {
-    color: mediumpurple;
-    padding-left: 1rem;
-  }
-
-  span.count {
-    font-style: italic;
-  }
+    span.count {
+        font-style: italic;
+    }
 </style>

@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 
 // Buefy:
-import {Button, Field, Input, Navbar, Modal} from 'buefy'
+import {Button, Field, Input, Navbar, Modal, Radio} from 'buefy'
 import '@/assets/main.scss' // import 'buefy/dist/buefy.css'
 
 // Font Awesome:
@@ -22,7 +22,7 @@ import Favourites from "@/components/Favourites";
 //
 // Buefy
 //
-[Button, Field, Input, Navbar, Modal].forEach(component => {
+[Button, Field, Input, Navbar, Modal, Radio].forEach(component => {
     Vue.use(component)
 })
 
