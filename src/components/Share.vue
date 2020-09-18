@@ -17,6 +17,25 @@
           <h5>Skicka länk</h5>
           <p>Kopiera den här länken och skicka till din partner:</p>
         </div>
+        <b-field>
+          <b-input
+            placeholder="Search..."
+            expanded
+            :value="getActionUrl(actionId)"
+          />
+          <p class="control">
+            <button
+              class="button copy-to-clipboard"
+              :data-clipboard-text="getActionUrl(actionId)"
+            >
+              <span class="icon is-small">
+                <font-awesome-icon
+                  :icon="['far', 'copy']"
+                />
+              </span>
+            </button>
+          </p>
+        </b-field>
       </div>
       <div
         class="box"
@@ -68,7 +87,7 @@
 </template>
 
 <script>
-
+import Clipboard from 'clipboard'
 import ComponentMixins from "@/util/ComponentMixins";
 
 export default {
@@ -116,7 +135,21 @@ export default {
     },
   },
   mounted() {
-    // this.search = this.debounce(this.search, 500)
+    const toaster = this.$buefy.toast
+    const clipboard = new Clipboard('.copy-to-clipboard');
+    clipboard.on('success', (/* e */) => {
+      toaster.open({
+        message: 'Nu kan du klistra in länken i en annan app.',
+        position: 'is-bottom'
+      })
+    })
+    clipboard.on('error', (e) => {
+      console.log('💥', e)
+    })
+    this.clipboard = clipboard
+  },
+  destroyed() {
+    this.clipboard.destroy()
   },
   async created() {
     try {

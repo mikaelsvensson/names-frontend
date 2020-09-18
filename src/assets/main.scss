@@ -41,6 +41,8 @@ $link-invert: findColorInvert($link);
 
 $navbar-item-color: $link;
 
+$toast-border-radius: $radius;
+
 // Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
