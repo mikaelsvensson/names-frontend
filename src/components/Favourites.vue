@@ -11,8 +11,34 @@
       </div>
     </section>
     <section>
-      <div class=search-result-item>
-        <div class="name"></div>
+      <b-field>
+        <b-radio-button
+          v-for="item in filterOptions"
+          :key="item.key"
+          v-model="filterOption"
+          :native-value="item.key"
+        >
+          {{ item.label }}
+        </b-radio-button>
+      </b-field>
+
+      <div v-if="listFiltered.length === 0">
+        <p v-if="filterOption === 'mine'">
+          Du har inte röstat på några favoriter ännu.
+        </p>
+        <p v-if="filterOption === 'ours'">
+          Ni har tyvärr några gemensamma favoriter ännu.
+        </p>
+        <p v-if="filterOption === 'all'">
+          Varken du eller din partner har röstat på några namn ännu.
+        </p>
+      </div>
+
+      <div
+        v-if="listFiltered.length > 0"
+        class="search-result-item"
+      >
+        <div class="name" />
         <div class="vote-you">
           Du
         </div>
@@ -21,7 +47,7 @@
         </div>
       </div>
       <div
-        v-for="item in list"
+        v-for="item in listFiltered"
         :key="item.id"
         class="search-result-item"
       >
@@ -106,11 +132,29 @@
 <script>
 import ComponentMixins from "@/util/ComponentMixins";
 
+const FILTERS = {
+  mine: {
+    label: 'Mina',
+    filter: (item) => item.votes.you > 0
+  },
+  ours: {
+    label: 'Gemensamma',
+    filter: (item) => item.votes.you > 0 && item.votes.partner > 0
+  },
+  all: {
+    label: 'Även bortröstade',
+    filter: () => true
+  }
+}
+
 export default {
   name: 'Favourites',
   data: function () {
     return {
-      list: []
+      listAll: [],
+      listFiltered: [],
+      filterOption: 'ours',
+      filterOptions: Object.entries(FILTERS).map(([key, {label}]) => ({key, label}))
     };
   },
   mixins: [
@@ -139,19 +183,24 @@ export default {
         votes[id] = await votesResponse.json()
       }
 
-      this.list = names.map(name => ({
+      this.listAll = names.map(name => ({
         ...name,
         votes: {
           you: votes[userId].find(vote => vote.nameId === name.id)?.value,
           partner: Object.values(votes).flatMap(x => x).find(vote => relatedUserIds.includes(vote.userId) && name.id === vote.nameId)?.value
         }
-      })).filter(item => typeof item.votes.you !== 'undefined' || typeof item.votes.partner !== 'undefined')
+      }))
+        .filter(item => typeof item.votes.you !== 'undefined' || typeof item.votes.partner !== 'undefined')
     } catch (e) {
       console.log('💥', e)
-      this.list = []
+      this.listAll = []
     }
+    this.listFiltered = this.listAll.filter(FILTERS[this.filterOption].filter)
   },
   watch: {
+    filterOption: function () {
+      this.listFiltered = this.listAll.filter(FILTERS[this.filterOption].filter)
+    }
   }
 }
 </script>
