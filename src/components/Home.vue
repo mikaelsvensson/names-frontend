@@ -1,19 +1,15 @@
 <template>
     <div>
-      <section class="hero is-primary">
-        <div class="hero-body">
-          <div class="container">
-            <h1 class="title">
-              Hitta era favoritnamn
-            </h1>
-            <h2 class="subtitle">
-              Upptäck vilka namn ni båda gillar.
-            </h2>
-          </div>
-        </div>
-      </section>
-
       <section>
+        <div class="block">
+          <h1 class="title">
+              Vad ska barnet heta?
+          </h1>
+          <h2 class="subtitle">
+              Upptäck vilka namn ni båda gillar.
+          </h2>
+        </div>
+
         <div class="box">
 
           <div class="content">

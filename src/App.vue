@@ -8,7 +8,7 @@
             Hem
           </b-navbar-item>
           <b-navbar-item href="#/explore">
-            Upptäck
+            Sök
           </b-navbar-item>
           <b-navbar-item href="#/share">
             Dela

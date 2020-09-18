@@ -1,38 +1,27 @@
 <template>
   <div>
     <section>
-      <div class="content">
-          <h1>
-            Dela med partner
-          </h1>
-          <p>
-            Du och din partner kan koppla ihop era profiler så att ni ser varandras favoriter. Det finns tre sätt att göra det på.
-          </p>
+      <div class="block">
+        <h2 class="subtitle">
+          Du och din partner kan koppla ihop era profiler så att ni ser varandras favoriter.
+        </h2>
+        <h2 class="subtitle">
+          Det finns två sätt att göra det på.
+        </h2>
       </div>
-    </section>
-    <section>
       <div
         class="box"
         v-if="actionId"
       >
         <div class="content">
           <h5>Skicka länk</h5>
-          <p>Skicka den här länken till din partner:</p>
-          <p><code>{{ getActionUrl(actionId) }}</code></p>
+          <p>Kopiera den här länken och skicka till din partner:</p>
         </div>
       </div>
       <div
         class="box"
         v-if="actionId"
       >
-        <!--
-        <p>
-          <a
-            href="#"
-            @click.prevent.stop="isQrLinkModal = true"
-          >Visa en QR-kod med en länk för din partner</a>
-        </p>
--->
         <div class="content">
           <h5>Visa QR-kod</h5>
 
@@ -42,23 +31,9 @@
           <p>
             Din partner skannar QR-koden med sin mobilkamera och går till adressen som då dyker upp.
           </p>
-          <p><small>QR-kodläsare finns inbyggd i de flesta, men inte alla, mobilkameror.</small></p>
+          <p><small>QR-läsare finns i många mobilkameror, men inte alla.</small></p>
         </div>
       </div>
-
-<!--
-      <div
-        class="box"
-        v-if="actionId"
-      >
-        <div class="content">
-          <h5>Skriv kod</h5>
-
-          <p>Be din partner surfa till den här hemsidan och sedan klicka på Jag har en kod. På den sidan ska hen skriva in den här koden:</p>
-          <p><code>{{ actionId }}</code></p>
-        </div>
-      </div>
--->
 
       <b-modal
         v-model="isQrLinkModal"

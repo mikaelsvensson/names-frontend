@@ -1,16 +1,12 @@
 <template>
   <div>
     <section>
-      <div class="content">
-        <h1>
-          Era favoriter
-        </h1>
-        <p>
-          Dina och din partners favoriter samlade.
-        </p>
+      <div class="block">
+        <h2 class="subtitle">
+          Era favoriter samlade på samma sida.
+        </h2>
       </div>
-    </section>
-    <section>
+
       <b-field>
         <b-radio-button
           v-for="item in filterOptions"

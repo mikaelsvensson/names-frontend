@@ -29,7 +29,11 @@ $colors: (
         "twitter": ($twitter, $twitter-invert)
 );
 
-$box-background-color: findLightColor($primary);
+$box-background-color: $white;
+$box-radius: $radius;
+$box-padding: 1rem;
+$box-shadow: 0.1em 0.1em 0.4em 0 rgba($scheme-invert, 0.2), 0 0px 0 1px rgba($scheme-invert, 0.1);
+
 // Links
 $link: #175fb1;
 $link-invert: findColorInvert($link);

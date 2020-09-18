@@ -1,16 +1,6 @@
 <template>
   <div>
     <section>
-      <div class="content">
-        <h1>
-          Upptäck namn
-        </h1>
-        <p>
-          Här kan du söka efter namn.
-        </p>
-      </div>
-    </section>
-    <section>
       <b-field>
         <b-input
           v-model="searchText"
