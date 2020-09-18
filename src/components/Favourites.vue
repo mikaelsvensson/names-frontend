@@ -71,34 +71,45 @@
           >⚤</span>
         </div>
         <div class="vote-you">
-          <div class="buttons">
-            <span class="icon is-small">
-              <!-- User's vote -->
-              <font-awesome-icon
-                v-if="item.votes.you === 100"
-                :style="{ color: 'green' }"
-                :icon="[ 'far', 'smile']"
-              />
-              <font-awesome-icon
-                v-if="item.votes.you === 0"
-                :style="{ color: 'orange' }"
-                :icon="[ 'far', 'meh']"
-              />
-              <font-awesome-icon
-                v-if="item.votes.you === -100"
-                :style="{ color: 'red' }"
-                :icon="[ 'far', 'frown']"
-              />
-              <font-awesome-icon
-                v-if="typeof item.votes.you === 'undefined'"
-                :style="{ color: '#ccc' }"
-                :icon="[ 'fa', 'question']"
-              />
-            </span>
+          <div class="vote-buttons">
+            <div class="buttons">
+              <b-button
+                type="is-light"
+                @click="vote(item.id, 100)"
+              >
+                <span class="icon is-small">
+                  <font-awesome-icon
+                    :style="{ color: 'green' }"
+                    :icon="[item.votes.you === 100 ? 'fa' : 'far', 'smile']"
+                  />
+                </span>
+              </b-button>
+              <b-button
+                type="is-light"
+                @click="vote(item.id, 0)"
+              >
+                <span class="icon is-small">
+                  <font-awesome-icon
+                    :style="{ color: 'orange' }"
+                    :icon="[item.votes.you === 0 ? 'fa' : 'far', 'meh']"
+                  />
+                </span>
+              </b-button>
+              <b-button
+                type="is-light"
+                @click="vote(item.id, -100)"
+              >
+                <span class="icon is-small">
+                  <font-awesome-icon
+                    :style="{ color: 'red' }"
+                    :icon="[item.votes.you === -100 ? 'fa' : 'far', 'frown']"
+                  />
+                </span>
+              </b-button>
+            </div>
           </div>
         </div>
         <div class="vote-partner">
-          <div class="buttons">
             <span class="icon is-small">
               <!-- Partner's vote -->
               <font-awesome-icon
@@ -122,7 +133,6 @@
                 :icon="[ 'fa', 'question']"
               />
             </span>
-          </div>
         </div>
       </div>
     </section>
@@ -160,7 +170,31 @@ export default {
   mixins: [
     ComponentMixins
   ],
-  methods: {},
+  methods: {
+    vote: async function (id, value) {
+      try {
+        const userId = await this.getUserId();
+        const voteResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/votes/${id}`, {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({value})
+        })
+        if (voteResponse.ok) {
+          const item = this.listAll.find(o => o.id === id)
+          if (item) {
+            item.votes.you = value;
+          }
+        } else {
+          console.log('💥 Failed to cast votes')
+        }
+      } catch (e) {
+        console.log('💥', e)
+      }
+    }
+  },
   mounted() {
   },
   async created() {
@@ -211,22 +245,18 @@ export default {
     padding: 0.5em 0;
     align-items: center;
 
-    div {
-      /*flex: 0;*/
-    }
-
     div.name {
       flex: 1;
     }
 
     div.popularity {
-      flex-basis: 4em;
+      flex-basis: 3.5em;
       text-align: right;
     }
 
     div.vote-you {
 
-      flex-basis: 4em;
+      flex-basis: 9em;
 
       div.buttons {
         flex-wrap: unset;
@@ -235,6 +265,8 @@ export default {
 
     div.vote-partner {
       flex-basis: 4em;
+      display: flex;
+      justify-content: center;
     }
   }
 </style>
