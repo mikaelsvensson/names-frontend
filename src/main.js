@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 
 // Buefy:
-import {Button, Field, Input, Navbar, Modal, Radio, Toast} from 'buefy'
+import {Button, Field, Input, Navbar, Modal, Radio, Toast, Skeleton} from 'buefy'
 import '@/assets/main.scss' // import 'buefy/dist/buefy.css'
 
 // Font Awesome:
@@ -18,11 +18,12 @@ import Home from "@/components/Home";
 import PerformAction from "@/components/PerformAction";
 import Share from "@/components/Share";
 import Favourites from "@/components/Favourites";
+import Name from "@/components/Name";
 
 //
 // Buefy
 //
-[Button, Field, Input, Navbar, Modal, Radio, Toast].forEach(component => {
+[Button, Field, Input, Navbar, Modal, Radio, Toast, Skeleton].forEach(component => {
     Vue.use(component)
 })
 
@@ -52,8 +53,14 @@ const routes = [
         component: Home
     },
     {
-        path: '/explore',
+        name: 'explore',
+        path: '/explore/:filters*',
         component: Explore
+    },
+    {
+        name: 'name',
+        path: '/name/:nameId',
+        component: Name
     },
     {
         path: '/share',
