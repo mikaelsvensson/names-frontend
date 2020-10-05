@@ -42,6 +42,15 @@
         </b-radio-button>
       </b-field>
 
+      <article
+        class="message"
+        v-if="!isFilterSpecified"
+      >
+        <div class="message-body">
+          Använd sökfältet och knapparna ovan att hitta namn.
+        </div>
+      </article>
+
       <Loader v-if="this.isSearching" />
 
       <div
@@ -149,6 +158,13 @@ const FILTER_MAPPERS = {
   length: (filterValue) => (LENGTH_FILTERS[filterValue] ?? LENGTH_FILTERS.all).queryParam
 }
 
+const defaultFilters = {
+  name: '',
+  gender: 'all',
+  popularity: 'all',
+  length: 'all'
+}
+
 export default {
   name: 'SearchResult',
   components: {Loader, ListItem},
@@ -169,12 +185,7 @@ export default {
         .reduce((filters, current) => ({
           ...filters,
           [current.substr(0, current.indexOf('-'))]: current.substr(current.indexOf('-') + 1)
-        }), {
-          name: '',
-          gender: 'all',
-          popularity: 'all',
-          length: 'all'
-        })
+        }), defaultFilters)
     }
   },
   mixins: [
@@ -188,11 +199,15 @@ export default {
         params: {
           filters: Object.entries(this.filters)
             .filter(([, value]) => !!value)
-            .map(keyValue => keyValue.join('-') )
+            .map(keyValue => keyValue.join('-'))
         }
       })
     },
     runSearch: async function (filters) {
+      if (!this.isFilterSpecified) {
+        this.searchResult = []
+        return
+      }
       const userId = await this.getUserId();
       const queryParams = Object.entries(filters)
         .map(([key, value]) => FILTER_MAPPERS[key](value))
@@ -248,6 +263,11 @@ export default {
 
     this.runSearch(this.filters)
   },
+  computed: {
+    isFilterSpecified: function () {
+      return Object.keys(defaultFilters).some(filterKey => this.filters[filterKey] !== defaultFilters[filterKey])
+    }
+  },
   watch: {
     'filters.name': function () {
       this.onSearchTextChange()
@@ -265,7 +285,7 @@ export default {
       this.runSearch((to.params.filters ?? [])
         .reduce((filters, current) => ({
           ...filters,
-          [current.substr(0, current.indexOf('-'))]: current.substr(current.indexOf('-')+1)
+          [current.substr(0, current.indexOf('-'))]: current.substr(current.indexOf('-') + 1)
         }), {}))
     }
   }
