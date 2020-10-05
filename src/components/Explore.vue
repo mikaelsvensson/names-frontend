@@ -31,6 +31,17 @@
         </b-radio-button>
       </b-field>
 
+      <b-field>
+        <b-radio-button
+          v-for="item in lengthOptions"
+          :key="item.key"
+          v-model="filters.length"
+          :native-value="item.key"
+        >
+          {{ item.label }}
+        </b-radio-button>
+      </b-field>
+
       <Loader v-if="this.isSearching" />
 
       <div
@@ -111,10 +122,31 @@ const POPULARITY_FILTERS = {
   }
 }
 
+const LENGTH_FILTERS = {
+  all: {
+    label: 'Alla',
+    queryParam: ''
+  },
+  short: {
+    label: 'Korta',
+    queryParam: `attribute-filter=SYLLABLE_COUNT:LESS_THAN:${2}`
+  },
+  medium: {
+    label: 'Medel',
+    queryParam: `attribute-filter=SYLLABLE_COUNT:GREATER_THAN:${1.9}&attribute-filter=SYLLABLE_COUNT:LESS_THAN:${4}`
+  },
+  long: {
+    label: 'Långa',
+    queryParam: `attribute-filter=SYLLABLE_COUNT:GREATER_THAN:${3.9}`
+  }
+}
+
+
 const FILTER_MAPPERS = {
   name: (filterValue) => filterValue ? `name-prefix=${filterValue}` : null,
   gender: (filterValue) => (GENDER_FILTERS[filterValue] ?? GENDER_FILTERS.all).queryParam,
-  popularity: (filterValue) => (POPULARITY_FILTERS[filterValue] ?? POPULARITY_FILTERS.all).queryParam
+  popularity: (filterValue) => (POPULARITY_FILTERS[filterValue] ?? POPULARITY_FILTERS.all).queryParam,
+  length: (filterValue) => (LENGTH_FILTERS[filterValue] ?? LENGTH_FILTERS.all).queryParam
 }
 
 export default {
@@ -132,6 +164,7 @@ export default {
       searchResult: [],
       genderOptions: Object.entries(GENDER_FILTERS).map(([key, {label}]) => ({key, label})),
       popularityOptions: Object.entries(POPULARITY_FILTERS).map(([key, {label}]) => ({key, label})),
+      lengthOptions: Object.entries(LENGTH_FILTERS).map(([key, {label}]) => ({key, label})),
       filters: initialFilters
         .reduce((filters, current) => ({
           ...filters,
@@ -139,7 +172,8 @@ export default {
         }), {
           name: '',
           gender: 'all',
-          popularity: 'all'
+          popularity: 'all',
+          length: 'all'
         })
     }
   },
@@ -222,6 +256,9 @@ export default {
       this.search()
     },
     'filters.popularity': function () {
+      this.search()
+    },
+    'filters.length': function () {
       this.search()
     },
     $route(to/*, from*/) {
