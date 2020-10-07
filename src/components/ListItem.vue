@@ -25,46 +25,72 @@
         class="icon-unisex"
       >⚤</span>
     </div>
-    <div class="vote-buttons">
-      <div class="buttons">
-        <b-button
-          type="is-light"
-          :key="id + '100' + lastVoteUpdate"
-          @click="vote(id, 100)"
-        >
-          <span class="icon is-small">
-            <font-awesome-icon
-              :style="{ color: 'green' }"
-              :icon="[getVoteValue(id) === 100 ? 'fa' : 'far', 'smile']"
-            />
-          </span>
-        </b-button>
-        <b-button
-          type="is-light"
-          :key="id + '0' + lastVoteUpdate"
-          @click="vote(id, 0)"
-        >
-          <span class="icon is-small">
-            <font-awesome-icon
-              :style="{ color: 'orange' }"
-              :icon="[getVoteValue(id) === 0 ? 'fa' : 'far', 'meh']"
-            />
-          </span>
-        </b-button>
-        <b-button
-          type="is-light"
-          :key="id + '-100' + lastVoteUpdate"
-          @click="vote(id, -100)"
-        >
-          <span class="icon is-small">
-            <font-awesome-icon
-              :style="{ color: 'red' }"
-              :icon="[getVoteValue(id) === -100 ? 'fa' : 'far', 'frown']"
-            />
-          </span>
-        </b-button>
+    <div class="vote-you">
+      <div class="vote-buttons">
+        <div class="buttons">
+          <b-button
+            type="is-light"
+            @click="castVote(100)"
+          >
+            <span class="icon is-small">
+              <font-awesome-icon
+                :style="{ color: 'green' }"
+                :icon="[currentUserVoteValue === 100 ? 'fa' : 'far', 'smile']"
+              />
+            </span>
+          </b-button>
+          <b-button
+            type="is-light"
+            @click="castVote(0)"
+          >
+            <span class="icon is-small">
+              <font-awesome-icon
+                :style="{ color: 'orange' }"
+                :icon="[currentUserVoteValue === 0 ? 'fa' : 'far', 'meh']"
+              />
+            </span>
+          </b-button>
+          <b-button
+            type="is-light"
+            @click="castVote(-100)"
+          >
+            <span class="icon is-small">
+              <font-awesome-icon
+                :style="{ color: 'red' }"
+                :icon="[currentUserVoteValue === -100 ? 'fa' : 'far', 'frown']"
+              />
+            </span>
+          </b-button>
+        </div>
       </div>
     </div>
+      <div
+        v-if="isPartnerVoteShown"
+        class="vote-partner"
+      >
+        <span class="icon is-small">
+          <font-awesome-icon
+            v-if="partnerVoteValue === 100"
+            :style="{ color: 'green' }"
+            :icon="[ 'far', 'smile']"
+          />
+          <font-awesome-icon
+            v-if="partnerVoteValue === 0"
+            :style="{ color: 'orange' }"
+            :icon="[ 'far', 'meh']"
+          />
+          <font-awesome-icon
+            v-if="partnerVoteValue === -100"
+            :style="{ color: 'red' }"
+            :icon="[ 'far', 'frown']"
+          />
+          <font-awesome-icon
+            v-if="typeof partnerVoteValue === 'undefined'"
+            :style="{ color: '#ccc' }"
+            :icon="[ 'fa', 'question']"
+          />
+        </span>
+      </div>
   </div>
 </template>
 
@@ -78,6 +104,7 @@ export default {
   name: "ListItem",
   data: function () {
     return {
+      updatedUserVoteValue: null
     }
   },
   mixins: [
@@ -96,9 +123,31 @@ export default {
     attributes: {
       default: function () { return [] },
       type: Array
+    },
+    isPartnerVoteShown: {
+      default: false,
+      type: Boolean
+    },
+    userVoteValue: {
+      default: undefined,
+      type: Number
+    },
+    partnerVoteValue: {
+      default: undefined,
+      type: Number
+    }
+  },
+  computed: {
+    currentUserVoteValue: function () {
+      return this.updatedUserVoteValue !== null ? this.updatedUserVoteValue : this.userVoteValue
     }
   },
   methods: {
+    castVote: async function (voteValue) {
+      if (await this.vote(this.id, voteValue)) {
+        this.updatedUserVoteValue = voteValue
+      }
+    },
     getGender: function () {
       const ratioWomen = this.attributes.find(attr => attr.key === 'SCB_PERCENT_WOMEN')?.value;
       return typeof ratioWomen !== 'undefined'
@@ -108,11 +157,7 @@ export default {
             ? 'MALE'
             : 'UNISEX'))
         : null
-    },
-    async created() {
-      const userId = await this.getUserId();
-      await this.loadVotes(userId)
-    },
+    }
   }
 }
 </script>
@@ -135,15 +180,24 @@ export default {
         }
 
         div.popularity {
-            flex-basis: 4em;
+          flex-basis: 3.5em;
             text-align: right;
         }
 
-        div.vote-buttons {
-            div.buttons {
-                flex-wrap: unset;
-            }
+      div.vote-you {
+
+        flex-basis: 9em;
+
+        div.buttons {
+          flex-wrap: unset;
         }
+      }
+
+      div.vote-partner {
+        flex-basis: 4em;
+        display: flex;
+        justify-content: center;
+      }
     }
 
     .icon-male {

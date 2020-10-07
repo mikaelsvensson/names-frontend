@@ -22,34 +22,53 @@
         <p v-if="filterOption === 'mine'">
           Du har inte röstat på några favoriter ännu.
         </p>
-        <div v-if="filterOption === 'ours' && isUserConnected" class="content">
+        <div
+          v-if="filterOption === 'ours' && isUserConnected"
+          class="content"
+        >
           <p>
             Ni har tyvärr inte några gemensamma favoriter ännu.
           </p>
         </div>
-        <div v-if="filterOption === 'ours' && !isUserConnected" class="content">
+        <div
+          v-if="filterOption === 'ours' && !isUserConnected"
+          class="content"
+        >
           <p>
             Ni har inte kopplat ihop era profiler ännu.
           </p>
           <p>
-            Gå till <router-link to="/share">Dela</router-link> för att göra detta.
+            Gå till
+            <router-link to="/share">
+              Dela
+            </router-link>
+            för att göra detta.
           </p>
         </div>
-        <div v-if="filterOption === 'all' && isUserConnected" class="content">
+        <div
+          v-if="filterOption === 'all' && isUserConnected"
+          class="content"
+        >
           <p>
-          Varken du eller din partner har röstat på några namn ännu.
+            Varken du eller din partner har röstat på några namn ännu.
           </p>
         </div>
-        <div v-if="filterOption === 'all' && !isUserConnected" class="content">
+        <div
+          v-if="filterOption === 'all' && !isUserConnected"
+          class="content"
+        >
           <p>
             Du har inte röstat på namn ännu.
           </p>
           <p>
-            När ni kopplat ihop era profiler på <router-link to="/share">Dela</router-link>-sidan så ser du även din partners röster här.
+            När ni kopplat ihop era profiler på
+            <router-link to="/share">
+              Dela
+            </router-link>
+            -sidan så ser du även din partners röster här.
           </p>
         </div>
-        <p v-if="filterOption === 'all'">
-        </p>
+        <p v-if="filterOption === 'all'" />
       </div>
 
       <div
@@ -64,101 +83,25 @@
           Partner
         </div>
       </div>
-      <div
+      <ListItem
         v-for="item in listFiltered"
         :key="item.id"
-        class="search-result-item"
-      >
-        <div class="name">
-          {{ item.name }}
 
-          <span
-            v-if="item.male && !item.female"
-            class="icon-male"
-            title="Över 90 % av personerna med detta namn är män."
-          >♂</span>
-          <span
-            v-if="item.female && !item.male"
-            title="Över 90 % av personerna med detta namn är kvinnor."
-            class="icon-female"
-          >♀</span>
-          <span
-            v-if="item.female && item.male"
-            title="Namnet bärs av både kvinnor och män."
-            class="icon-unisex"
-          >⚤</span>
-        </div>
-        <div class="vote-you">
-          <div class="vote-buttons">
-            <div class="buttons">
-              <b-button
-                type="is-light"
-                @click="vote(item.id, 100)"
-              >
-                <span class="icon is-small">
-                  <font-awesome-icon
-                    :style="{ color: 'green' }"
-                    :icon="[item.votes.you === 100 ? 'fa' : 'far', 'smile']"
-                  />
-                </span>
-              </b-button>
-              <b-button
-                type="is-light"
-                @click="vote(item.id, 0)"
-              >
-                <span class="icon is-small">
-                  <font-awesome-icon
-                    :style="{ color: 'orange' }"
-                    :icon="[item.votes.you === 0 ? 'fa' : 'far', 'meh']"
-                  />
-                </span>
-              </b-button>
-              <b-button
-                type="is-light"
-                @click="vote(item.id, -100)"
-              >
-                <span class="icon is-small">
-                  <font-awesome-icon
-                    :style="{ color: 'red' }"
-                    :icon="[item.votes.you === -100 ? 'fa' : 'far', 'frown']"
-                  />
-                </span>
-              </b-button>
-            </div>
-          </div>
-        </div>
-        <div class="vote-partner">
-          <span class="icon is-small">
-            <!-- Partner's vote -->
-            <font-awesome-icon
-              v-if="item.votes.partner === 100"
-              :style="{ color: 'green' }"
-              :icon="[ 'far', 'smile']"
-            />
-            <font-awesome-icon
-              v-if="item.votes.partner === 0"
-              :style="{ color: 'orange' }"
-              :icon="[ 'far', 'meh']"
-            />
-            <font-awesome-icon
-              v-if="item.votes.partner === -100"
-              :style="{ color: 'red' }"
-              :icon="[ 'far', 'frown']"
-            />
-            <font-awesome-icon
-              v-if="typeof item.votes.partner === 'undefined'"
-              :style="{ color: '#ccc' }"
-              :icon="[ 'fa', 'question']"
-            />
-          </span>
-        </div>
-      </div>
+        :id="item.id"
+        :name="item.name"
+        :attributes="item.attributes"
+        is-partner-vote-shown
+        :partner-vote-value="item.votes.partner"
+        :user-vote-value="userVoteValue(item.id)"
+      />
     </section>
   </div>
 </template>
 
 <script>
 import ComponentMixins from "@/util/ComponentMixins";
+import ListItem from "@/components/ListItem";
+import VotesMixins from "@/util/VotesMixins";
 
 const FILTERS = {
   mine: {
@@ -175,19 +118,23 @@ const FILTERS = {
   }
 }
 
+let userId = null
+
 export default {
   name: 'Favourites',
+  components: {ListItem},
   data: function () {
     return {
-      listAll: [],
       listFiltered: [],
       filterOption: 'ours',
       filterOptions: Object.entries(FILTERS).map(([key, {label}]) => ({key, label})),
-      isUserConnected: false
+      isUserConnected: false,
+      relatedUserIds: []
     };
   },
   mixins: [
-    ComponentMixins
+    ComponentMixins,
+    VotesMixins
   ],
   methods: {
     vote: async function (id, value) {
@@ -202,92 +149,88 @@ export default {
           body: JSON.stringify({value})
         })
         if (voteResponse.ok) {
-          const item = this.listAll.find(o => o.id === id)
-          if (item) {
-            item.votes.you = value;
-          }
+          this.refreshList()
         } else {
           console.log('💥 Failed to cast votes')
         }
       } catch (e) {
         console.log('💥', e)
       }
+    },
+    userVoteValue(nameId) {
+      return this.getVoteValue(userId, nameId)
+    },
+    refreshList() {
+      this.listFiltered = this.names.map(name => ({
+        ...name,
+        votes: {
+          you: this.getVoteValue(userId, name.id),
+          partner: this.relatedUserIds.map(userId => this.getVoteValue(userId, name.id)).filter(value => typeof value !== 'undefined')[0]
+        }
+      }))
+        .filter(item => typeof item.votes.you !== 'undefined' || typeof item.votes.partner !== 'undefined')
+        .filter(FILTERS[this.filterOption].filter)
     }
-  },
-  mounted() {
   },
   async created() {
     try {
-      const userId = await this.getUserId();
+      userId = await this.getUserId();
 
       const relationshipsResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/relationships`, {mode: 'cors'})
 
       const items = await relationshipsResponse.json();
-      const relatedUserIds = items.map(item => item.id)
-      const userIds = [userId].concat(relatedUserIds)
+      this.relatedUserIds = items.map(item => item.id)
+      const userIds = [userId].concat(this.relatedUserIds)
 
       const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?voted-by=${userIds.join(',')}`, {mode: 'cors'})
 
-      const names = (await namesResponse.json()).names
+      this.names = (await namesResponse.json()).names
 
-      const votes = {}
-      for (const id of userIds) {
-        const votesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${id}/votes`, {mode: 'cors'})
-        votes[id] = await votesResponse.json()
-      }
+      await Promise.all(userIds.map(userId => this.loadVotes(userId)))
 
-      this.listAll = names.map(name => ({
-        ...name,
-        votes: {
-          you: votes[userId].find(vote => vote.nameId === name.id)?.value,
-          partner: Object.values(votes).flatMap(x => x).find(vote => relatedUserIds.includes(vote.userId) && name.id === vote.nameId)?.value
-        }
-      }))
-        .filter(item => typeof item.votes.you !== 'undefined' || typeof item.votes.partner !== 'undefined')
-
-      this.isUserConnected = relatedUserIds.length > 0
+      this.isUserConnected = this.relatedUserIds.length > 0
     } catch (e) {
       console.log('💥', e)
-      this.listAll = []
+      this.names = []
     }
-    this.listFiltered = this.listAll.filter(FILTERS[this.filterOption].filter)
+    this.refreshList()
   },
   watch: {
     filterOption: function () {
-      this.listFiltered = this.listAll.filter(FILTERS[this.filterOption].filter)
+      this.refreshList()
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-  div.search-result-item {
-    display: flex;
-    padding: 0.5em 0;
-    align-items: center;
+    div.search-result-item {
+        display: flex;
+        padding: 0.5em 0;
+        align-items: center;
 
-    div.name {
-      flex: 1;
+        div.name {
+            flex: 1;
+        }
+
+        div.popularity {
+            flex-basis: 3.5em;
+            text-align: right;
+        }
+
+        div.vote-you {
+
+            flex-basis: 9em;
+
+            div.buttons {
+                flex-wrap: unset;
+            }
+        }
+
+        div.vote-partner {
+            flex-basis: 4em;
+            display: flex;
+            justify-content: center;
+        }
     }
-
-    div.popularity {
-      flex-basis: 3.5em;
-      text-align: right;
-    }
-
-    div.vote-you {
-
-      flex-basis: 9em;
-
-      div.buttons {
-        flex-wrap: unset;
-      }
-    }
-
-    div.vote-partner {
-      flex-basis: 4em;
-      display: flex;
-      justify-content: center;
-    }
-  }
 </style>

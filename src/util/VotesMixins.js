@@ -1,6 +1,6 @@
-let userVotes = []
+const votes = {}
 
-let isUserVotesStale = true
+const stale = {}
 
 export default {
     data: function () {
@@ -10,24 +10,24 @@ export default {
     },
     methods: {
         async loadVotes(userId) {
-            if (isUserVotesStale) {
+            if (typeof stale[userId] === 'undefined' || stale[userId] === true) {
                 try {
                     const votesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/votes`, {mode: 'cors'})
                     if (votesResponse.ok) {
-                        userVotes = await votesResponse.json()
+                        votes[userId] = await votesResponse.json()
                     } else {
                         console.log('💥 Failed to fetch votes')
-                        userVotes = []
+                        votes[userId] = []
                     }
                 } catch (e) {
                     console.log('💥', e)
-                    userVotes = []
+                    votes[userId] = []
                 }
-                isUserVotesStale = false
+                stale[userId] = false
             }
         },
-        getVoteValue: function (nameId) {
-            return userVotes.find(vote => vote.nameId === nameId)?.value
+        getVoteValue: function (userId, nameId) {
+            return (votes[userId] ?? []).find(vote => vote.nameId === nameId)?.value
         },
         vote: async function (nameId, value) {
             try {
@@ -41,23 +41,28 @@ export default {
                     body: JSON.stringify({value})
                 })
                 if (voteResponse.ok) {
-                    const userVote = userVotes.find(vote => vote.nameId === nameId);
+                    if (!votes[userId]) {
+                        votes[userId] = []
+                    }
+                    const userVote = votes[userId].find(vote => vote.nameId === nameId);
                     if (userVote) {
                         userVote.value = value
                     } else {
-                        userVotes.push({
+                        votes[userId].push({
                             nameId: nameId,
                             userId: null,
                             value
                         })
                     }
                     this.lastVoteUpdate = Date.now()
+                    return true
                 } else {
                     console.log('💥 Failed to cast votes')
                 }
             } catch (e) {
                 console.log('💥', e)
             }
+            return false
         }
     }
 };
