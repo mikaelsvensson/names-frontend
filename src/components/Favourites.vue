@@ -31,6 +31,14 @@
           </p>
         </div>
         <div
+          v-if="filterOption === 'not_voted_yet' && isUserConnected"
+          class="content"
+        >
+          <p>
+            Inga nya namn att rösta på. Du har redan röstat på alla namn som din partner röstat på.
+          </p>
+        </div>
+        <div
           v-if="filterOption === 'ours' && !isUserConnected"
           class="content"
         >
@@ -77,7 +85,7 @@
       >
         <div class="name" />
         <div class="vote-you">
-          Du
+          Jag
         </div>
         <div class="vote-partner">
           Partner
@@ -109,11 +117,15 @@ const FILTERS = {
     filter: (item) => item.votes.you > 0
   },
   ours: {
-    label: 'Gemensamma',
+    label: 'Bådas',
     filter: (item) => item.votes.you > 0 && item.votes.partner > 0
   },
+  not_voted_yet: {
+    label: 'Nya',
+    filter: (item) => typeof item.votes.you === 'undefined' && item.votes.partner >= 0
+  },
   all: {
-    label: 'Även nedröstade',
+    label: 'Alla röster',
     filter: () => true
   }
 }
