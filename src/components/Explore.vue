@@ -185,7 +185,7 @@ export default {
         .reduce((filters, current) => ({
           ...filters,
           [current.substr(0, current.indexOf('-'))]: current.substr(current.indexOf('-') + 1)
-        }), defaultFilters)
+        }), {...defaultFilters})
     }
   },
   mixins: [
