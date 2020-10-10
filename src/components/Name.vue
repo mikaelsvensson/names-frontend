@@ -11,7 +11,7 @@
           {{ name.name }}
         </h1>
         <h2 class="subtitle">
-          Fakta och annat
+          Statistik
         </h2>
       </div>
 
@@ -41,9 +41,56 @@
         </div>
       </nav>
     </section>
-    <section>
+    <section class="py-4">
       <h2 class="subtitle">
-        Liknande namn:
+        Din röst
+      </h2>
+      <div class="vote-buttons">
+        <div class="buttons is-centered">
+          <button
+            class="button is-large is-light"
+            @click="castVote(100)"
+          >
+            <span class="icon">
+              <font-awesome-icon
+                size="lg"
+                :style="{ color: 'green' }"
+                :icon="[currentUserVoteValue === 100 ? 'fa' : 'far', 'smile']"
+              />
+            </span>
+          </button>
+
+          <button
+            class="button is-large is-light"
+            @click="castVote(0)"
+          >
+            <span class="icon">
+              <font-awesome-icon
+                size="lg"
+                :style="{ color: 'orange' }"
+                :icon="[currentUserVoteValue === 0 ? 'fa' : 'far', 'meh']"
+              />
+            </span>
+          </button>
+
+          <button
+            class="button is-large is-light"
+            @click="castVote(-100)"
+          >
+            <span class="icon">
+              <font-awesome-icon
+                size="lg"
+                :style="{ color: 'red' }"
+                :icon="[currentUserVoteValue === -100 ? 'fa' : 'far', 'frown']"
+              />
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+    <section class="py-4">
+      <h2 class="subtitle">
+        Liknande
       </h2>
 
       <Loader v-if="!similar" />
@@ -57,6 +104,7 @@
           :key="item.id"
           :name="item.name"
           :id="item.id"
+          :user-vote-value="userVoteValue(item.id)"
         />
       </div>
     </section>
@@ -71,6 +119,8 @@ import Loader from "@/components/Loader";
 
 const numberFormat = new Intl.NumberFormat('se-SV');
 
+let userId = null
+
 export default {
   name: 'Name',
   components: {
@@ -80,7 +130,8 @@ export default {
   data: function () {
     return {
       name: null,
-      similar: null
+      similar: null,
+      currentUserVoteValue: null
     }
   },
   mixins: [
@@ -88,6 +139,11 @@ export default {
     VotesMixins
   ],
   methods: {
+    castVote: async function (voteValue) {
+      if (await this.vote(this.name.id, voteValue)) {
+        this.currentUserVoteValue = voteValue
+      }
+    },
     getSimilar: async function () {
       const userId = await this.getUserId();
       const similarResp = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names/${this.name.id}/similar`, {mode: 'cors'})
@@ -134,6 +190,9 @@ export default {
 
       return `${numberFormat.format(valueM)} av ${numberFormat.format(multiplierM)}`
     },
+    userVoteValue(nameId) {
+      return this.getVoteValue(userId, nameId)
+    },
     getName: async function (nameId) {
       try {
         const nameResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/names/${nameId}`, {mode: 'cors'})
@@ -153,10 +212,11 @@ export default {
   async created() {
     await this.getName(this.$route.params.nameId)
 
-    const userId = await this.getUserId();
+    userId = await this.getUserId();
     await this.loadVotes(userId)
 
     await this.getSimilar()
+    this.currentUserVoteValue = this.getVoteValue(userId, this.name.id)
   },
   watch: {
     async $route(to/*, from*/) {
@@ -164,6 +224,7 @@ export default {
       this.similar = null
       await this.getName(to.params.nameId)
       await this.getSimilar()
+      this.currentUserVoteValue = this.getVoteValue(userId, this.name.id)
     }
   }
 }
