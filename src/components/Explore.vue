@@ -77,6 +77,7 @@
           :name="item.name"
           :id="item.id"
           :attributes="item.attributes"
+          :user-vote-value="userVoteValue(item.id)"
         />
 
         <div v-if="!isLast">
@@ -175,6 +176,9 @@ const defaultFilters = {
   popularity: 'all',
   length: 'all'
 }
+
+
+let userId = null
 
 export default {
   name: 'SearchResult',
@@ -282,12 +286,15 @@ export default {
         console.log('💥', e)
       }
     },
+    userVoteValue(nameId) {
+      return this.getVoteValue(userId, nameId)
+    },
   },
   mounted() {
     this.onSearchTextChange = this.debounce(this.search, 500)
   },
   async created() {
-    const userId = await this.getUserId();
+    userId = await this.getUserId();
     await this.loadVotes(userId)
 
     this.runSearch(this.filters)
