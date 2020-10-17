@@ -194,7 +194,7 @@ export default {
       this.relatedUserIds = items.map(item => item.id)
       const userIds = [userId].concat(this.relatedUserIds)
 
-      const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?voted-by=${userIds.join(',')}`, {mode: 'cors'})
+      const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?voted-by=${userIds.join(',')}&result-count=10000`, {mode: 'cors'})
 
       this.names = (await namesResponse.json()).names
 

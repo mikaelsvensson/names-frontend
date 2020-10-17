@@ -51,11 +51,11 @@
         </div>
       </article>
 
-      <Loader v-if="this.isSearching" />
+      <Loader v-if="isSearching" />
 
       <div
         class="search-result-list"
-        v-if="!this.isSearching"
+        v-if="isFilterSpecified && !isSearching"
       >
         <div
           v-if="searchResult.length === 0 && filters.name !== ''"
@@ -78,6 +78,15 @@
           :id="item.id"
           :attributes="item.attributes"
         />
+
+        <div v-if="!isLast">
+          <b-button
+            type="is-light"
+            @click="loadMore()"
+          >
+            Visa fler...
+          </b-button>
+        </div>
       </div>
     </section>
   </div>
@@ -90,6 +99,8 @@ import ListItem from "@/components/ListItem";
 import Loader from "@/components/Loader";
 
 const UNISEX_THRESHOLD = 0.1
+
+const BATCH_SIZE = 100
 
 let searchResultId = 0
 
@@ -178,6 +189,8 @@ export default {
     return {
       isSearching: false,
       searchResult: [],
+      searchOffset: 0,
+      isLast: false,
       genderOptions: Object.entries(GENDER_FILTERS).map(([key, {label}]) => ({key, label})),
       popularityOptions: Object.entries(POPULARITY_FILTERS).map(([key, {label}]) => ({key, label})),
       lengthOptions: Object.entries(LENGTH_FILTERS).map(([key, {label}]) => ({key, label})),
@@ -203,18 +216,22 @@ export default {
         }
       })
     },
-    runSearch: async function (filters) {
-      if (!this.isFilterSpecified) {
-        this.searchResult = []
-        return
-      }
+    loadMore: async function () {
+      this.searchOffset += BATCH_SIZE
+      const scrollY = window.pageYOffset
+      await this.loadNames(this.filters)
+      window.scrollTo(0, scrollY)
+    },
+    loadNames: async function (filters) {
       const userId = await this.getUserId();
       const queryParams = Object.entries(filters)
         .map(([key, value]) => FILTER_MAPPERS[key](value))
+        .concat([
+          `result-offset=${this.searchOffset}`,
+          `result-count=${BATCH_SIZE}`
+        ])
         .filter(param => !!param).join('&')
 
-      this.isSearching = true
-      this.searchResult = []
       const searchId = Date.now();
 
       searchResultId = searchId
@@ -222,10 +239,23 @@ export default {
       const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?${queryParams}`, {mode: 'cors'})
       if (searchResultId === searchId) {
         const names = await namesResponse.json();
-        this.searchResult = names.names
+        names.names.forEach(name => this.searchResult.push(name))
+        this.isLast = names.isLast
       } else {
         console.log('💬 Ignore result')
       }
+
+    },
+    runSearch: async function (filters) {
+      if (!this.isFilterSpecified) {
+        this.searchResult = []
+        return
+      }
+      this.searchResult = []
+      this.searchOffset = 0
+
+      this.isSearching = true
+      this.loadNames(filters)
       this.isSearching = false
     },
     addName: async function () {
@@ -251,7 +281,6 @@ export default {
       } catch (e) {
         console.log('💥', e)
       }
-
     },
   },
   mounted() {
