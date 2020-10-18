@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import Clipboard from 'clipboard'
+import Clipboard from 'clipboard/dist/clipboard.min'
 import ComponentMixins from "@/util/ComponentMixins";
 
 export default {
