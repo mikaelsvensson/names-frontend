@@ -9,8 +9,17 @@ $family-primary: 'Quattrocento', $family-sans-serif;
 $primary: #ffeaaf;
 $primary-invert: findColorInvert($primary);
 
-$success: #d1ffb5;
+$info: rgb(246, 226, 245);
+$info-invert: findColorInvert($info);
+
+$success: rgb(194, 236, 174);
 $success-invert: findColorInvert($success);
+
+$warning: rgb(250, 231, 147);
+$warning-invert: findColorInvert($warning);
+
+$danger: rgb(249, 198, 188);
+$danger-invert: findColorInvert($danger);
 
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
