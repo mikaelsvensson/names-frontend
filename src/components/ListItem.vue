@@ -85,7 +85,7 @@
             :icon="[ 'far', 'frown']"
           />
           <font-awesome-icon
-            v-if="typeof partnerVoteValue === 'undefined'"
+            v-if="partnerVoteValue === null"
             :style="{ color: '#ccc' }"
             :icon="[ 'fa', 'question']"
           />
