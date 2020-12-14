@@ -70,7 +70,8 @@ const routes = [
         component: Share
     },
     {
-        path: '/favourites',
+        name: 'favourites',
+        path: '/favourites/:filters*',
         component: Favourites
     },
     {
