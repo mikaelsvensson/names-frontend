@@ -1,12 +1,28 @@
 <template>
   <div>
-    <section>
+    <section v-if="!isLoggedIn">
       <div class="block">
         <h2 class="subtitle">
-          Du och din partner kan koppla ihop era profiler så att ni ser varandras favoriter.
+          Koppla ihop era profiler så att ni ser varandras favoriter.
         </h2>
+      </div>
+
+      <Notification type="INFO">
+        <div>
+          Först måste du logga in.
+        </div>
+        <div class="mt-2">
+          <Login
+            @mode="loginModeChanged($event)"
+            :show-logout="false"
+          />
+        </div>
+      </Notification>
+    </section>
+    <section v-if="isLoggedIn">
+      <div class="block">
         <h2 class="subtitle">
-          Det finns två sätt att göra det på.
+          Koppla ihop era profiler så att ni ser varandras favoriter.
         </h2>
       </div>
       <div
@@ -14,8 +30,8 @@
         v-if="actionId"
       >
         <div class="content">
-          <h5>Skicka länk</h5>
-          <p>Kopiera den här länken och skicka till din partner:</p>
+          <h5>Alternativ 1</h5>
+          <p>Kopiera länken och skicka till din partner:</p>
         </div>
         <b-field>
           <b-input
@@ -42,7 +58,7 @@
         v-if="actionId"
       >
         <div class="content">
-          <h5>Visa QR-kod</h5>
+          <h5>Alternativ 2</h5>
 
           <figure class="image">
             <img :src="getQrUrl(actionId)">
@@ -89,20 +105,34 @@
 <script>
 import Clipboard from 'clipboard/dist/clipboard.min'
 import ComponentMixins from "@/util/ComponentMixins";
+import Login, {Modes} from "@/components/auth/Login";
+import Notification from "@/components/Notification";
 
 export default {
   name: 'Share',
+  components: {Login, Notification},
   data: function () {
     return {
       isQrLinkModal: false,
       isShareLinkModal: false,
-      actionId: null
+      actionId: null,
+      isLoggedIn: false
     }
   },
   mixins: [
     ComponentMixins
   ],
   methods: {
+    async loginModeChanged(newMode) {
+      this.isLoggedIn = newMode === Modes.LOGGED_IN
+      if (this.isLoggedIn) {
+        try {
+          await this.createShareLink();
+        } catch (e) {
+          console.log('💥', e)
+        }
+      }
+    },
     getQrUrl: function (actionId) {
       return `${process.env.VUE_APP_BASE_URL}/actions/${actionId}/qr`
     },
@@ -111,12 +141,12 @@ export default {
     },
     createShareLink: async function () {
       try {
-        const userId = await this.getUserId();
-        const createActionResp = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/actions`, {
+        const createActionResp = await fetch(`${process.env.VUE_APP_BASE_URL}/actions`, {
           method: 'POST',
           mode: 'cors',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
           },
           body: JSON.stringify({
             type: 'ADD_RELATIONSHIP'
@@ -127,7 +157,7 @@ export default {
           console.log('💬', newAction)
           this.actionId = newAction.id
         } else {
-          console.log('💥 Failed to create name')
+          console.log('💥 Failed to create link')
         }
       } catch (e) {
         console.log('💥', e)
@@ -152,11 +182,6 @@ export default {
     this.clipboard.destroy()
   },
   async created() {
-    try {
-      await this.createShareLink();
-    } catch (e) {
-      console.log('💥', e)
-    }
   },
   watch: {}
 }
