@@ -1,6 +1,6 @@
-const votes = {}
+let votes = []
 
-const stale = {}
+let stale = true
 
 export default {
     data: function () {
@@ -9,46 +9,48 @@ export default {
         }
     },
     methods: {
-        async loadVotes(userId) {
-            if (typeof stale[userId] === 'undefined' || stale[userId] === true) {
+        async loadVotes() {
+            if (stale) {
                 try {
-                    const votesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/votes`, {mode: 'cors'})
+                    const votesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/votes`, {
+                        mode: 'cors',
+                        headers: {
+                            'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+                        }
+                    })
                     if (votesResponse.ok) {
-                        votes[userId] = await votesResponse.json()
+                        votes = await votesResponse.json()
                     } else {
                         console.log('💥 Failed to fetch votes')
-                        votes[userId] = []
+                        votes = []
                     }
                 } catch (e) {
                     console.log('💥', e)
-                    votes[userId] = []
+                    votes = []
                 }
-                stale[userId] = false
+                stale = false
             }
         },
-        getVoteValue: function (userId, nameId) {
-            return (votes[userId] ?? []).find(vote => vote.nameId === nameId)?.value
+        getVoteValue: function (nameId) {
+            return votes.find(vote => vote.nameId === nameId)?.value
         },
         vote: async function (nameId, value) {
             try {
-                const userId = await this.getUserId();
-                const voteResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/votes/${nameId}`, {
+                const voteResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/votes/${nameId}`, {
                     method: 'POST',
                     mode: 'cors',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
                     },
                     body: JSON.stringify({value})
                 })
                 if (voteResponse.ok) {
-                    if (!votes[userId]) {
-                        votes[userId] = []
-                    }
-                    const userVote = votes[userId].find(vote => vote.nameId === nameId);
+                    const userVote = votes.find(vote => vote.nameId === nameId);
                     if (userVote) {
                         userVote.value = value
                     } else {
-                        votes[userId].push({
+                        votes.push({
                             nameId: nameId,
                             userId: null,
                             value

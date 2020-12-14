@@ -178,8 +178,6 @@ const defaultFilters = {
 }
 
 
-let userId = null
-
 export default {
   name: 'SearchResult',
   components: {Loader, ListItem},
@@ -227,7 +225,6 @@ export default {
       window.scrollTo(0, scrollY)
     },
     loadNames: async function (filters) {
-      const userId = await this.getUserId();
       const queryParams = Object.entries(filters)
         .map(([key, value]) => FILTER_MAPPERS[key](value))
         .concat([
@@ -240,7 +237,11 @@ export default {
 
       searchResultId = searchId
 
-      const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names?${queryParams}`, {mode: 'cors'})
+      const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/names?${queryParams}`, {
+        mode: 'cors',
+        headers: {
+          'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+        }})
       if (searchResultId === searchId) {
         const names = await namesResponse.json();
         names.names.forEach(name => this.searchResult.push(name))
@@ -264,12 +265,12 @@ export default {
     },
     addName: async function () {
       try {
-        const userId = await this.getUserId();
-        const createNameResp = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names`, {
+        const createNameResp = await fetch(`${process.env.VUE_APP_BASE_URL}/names`, {
           method: 'POST',
           mode: 'cors',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
           },
           body: JSON.stringify({
             name: this.filters.name
@@ -287,15 +288,14 @@ export default {
       }
     },
     userVoteValue(nameId) {
-      return this.getVoteValue(userId, nameId)
+      return this.getVoteValue(nameId)
     },
   },
   mounted() {
     this.onSearchTextChange = this.debounce(this.search, 500)
   },
   async created() {
-    userId = await this.getUserId();
-    await this.loadVotes(userId)
+    await this.loadVotes()
 
     this.runSearch(this.filters)
   },

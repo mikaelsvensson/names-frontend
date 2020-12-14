@@ -145,8 +145,12 @@ export default {
       }
     },
     getSimilar: async function () {
-      const userId = await this.getUserId();
-      const similarResp = await fetch(`${process.env.VUE_APP_BASE_URL}/users/${userId}/names/${this.name.id}/similar`, {mode: 'cors'})
+      const similarResp = await fetch(`${process.env.VUE_APP_BASE_URL}/names/${this.name.id}/similar`, {
+        mode: 'cors',
+        headers: {
+          'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+        }
+      })
       this.similar = (await similarResp.json())
         .sort((a, b) => {
           const scoreB = Object.values(b.values).reduce((sum, term) => sum + term, 0);
@@ -195,7 +199,11 @@ export default {
     },
     getName: async function (nameId) {
       try {
-        const nameResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/names/${nameId}`, {mode: 'cors'})
+        const nameResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/names/${nameId}`, {
+          mode: 'cors',
+          headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+          }})
         if (nameResponse.ok) {
           this.name = await nameResponse.json()
         } else {
@@ -212,8 +220,7 @@ export default {
   async created() {
     await this.getName(this.$route.params.nameId)
 
-    userId = await this.getUserId();
-    await this.loadVotes(userId)
+    await this.loadVotes()
 
     await this.getSimilar()
     this.currentUserVoteValue = this.getVoteValue(userId, this.name.id)
