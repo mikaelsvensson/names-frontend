@@ -52,6 +52,8 @@ $navbar-item-color: $link;
 
 $toast-border-radius: $radius;
 
+$footer-background-color: $white;
+
 // Import Bulma and Buefy styles
 @import "../../node_modules/bulma/sass/utilities/_all.sass";
 @import "../../node_modules/bulma/sass/base/_all.sass";
