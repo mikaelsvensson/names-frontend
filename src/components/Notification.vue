@@ -18,6 +18,10 @@ const TYPE_CONFIG = {
     className: '',
     iconName: [ 'fa', 'comment' ]
   },
+  LOGIN: {
+    className: '',
+    iconName: [ 'fa', 'door-open' ]
+  },
   SUCCESS: {
     className: 'is-success',
     iconName: [ 'fa', 'thumbs-up' ]

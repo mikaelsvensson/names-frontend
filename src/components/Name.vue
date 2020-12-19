@@ -87,6 +87,16 @@
           </button>
         </div>
       </div>
+      <div v-if="showLoginForm" class="mt-2">
+        <Notification type="LOGIN">
+          <div>
+            För att rösta måste du logga in.
+          </div>
+          <div class="mt-2">
+            <Login :show-logout="false" />
+          </div>
+        </Notification>
+      </div>
     </section>
     <section class="py-4">
       <h2 class="subtitle">
@@ -103,8 +113,9 @@
           v-for="item in similar"
           :key="item.id"
           :name="item.name"
+          :attributes="item.attributes"
           :id="item.id"
-          :user-vote-value="userVoteValue(item.id)"
+          :user-vote-value="item.userVoteValue"
         />
       </div>
     </section>
@@ -116,47 +127,60 @@ import ComponentMixins from "@/util/ComponentMixins";
 import ListItem from "@/components/ListItem";
 import VotesMixins from "@/util/VotesMixins";
 import Loader from "@/components/Loader";
+import Login from "@/components/auth/Login";
+import Notification from "@/components/Notification";
 
 const numberFormat = new Intl.NumberFormat('se-SV');
 
-let userId = null
-
 export default {
   name: 'Name',
+  inject: ['token'],
   components: {
     Loader,
-    ListItem
+    ListItem,
+    Login,
+    Notification
   },
   data: function () {
     return {
       name: null,
       similar: null,
-      currentUserVoteValue: null
+      updatedUserVoteValue: null,
+      showLoginForm: false,
+      pendingVoteValue: null
     }
   },
   mixins: [
     ComponentMixins,
     VotesMixins
   ],
+  computed: {
+    currentUserVoteValue: function () {
+      return this.updatedUserVoteValue !== null ? this.updatedUserVoteValue : this.name?.userVoteValue
+    }
+  },
   methods: {
+    isLoggedIn: function () {
+      return !!this.token.value
+    },
     castVote: async function (voteValue) {
-      if (await this.vote(this.name.id, voteValue)) {
-        this.currentUserVoteValue = voteValue
+      if (this.isLoggedIn()) {
+        if (await this.vote(this.name.id, voteValue, this.token.value)) {
+          this.updatedUserVoteValue = voteValue;
+        }
+      } else {
+        this.showLoginForm = true
+        this.pendingVoteValue = voteValue
       }
     },
     getSimilar: async function () {
       const similarResp = await fetch(`${process.env.VUE_APP_BASE_URL}/names/${this.name.id}/similar`, {
         mode: 'cors',
         headers: {
-          'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+          ...(this.token.value ? {'Authorization': 'Bearer ' + this.token.value} : {})
         }
       })
-      this.similar = (await similarResp.json())
-        .sort((a, b) => {
-          const scoreB = Object.values(b.values).reduce((sum, term) => sum + term, 0);
-          const scoreA = Object.values(a.values).reduce((sum, term) => sum + term, 0);
-          return scoreB - scoreA;
-        })
+      this.similar = await similarResp.json()
     },
     getPopularityWomen: function () {
       const scbPercentOfPopulation = this.name.attributes.find(attr => attr.key === 'SCB_PERCENT_OF_POPULATION')?.value || 0
@@ -184,9 +208,9 @@ export default {
         return 'Noll'
       }
 
-      const expM = 1 + Math.round(Math.abs(Math.log10(scbPercentOfPopulation * (1.0-scbPercentWomen))));
+      const expM = 1 + Math.round(Math.abs(Math.log10(scbPercentOfPopulation * (1.0 - scbPercentWomen))));
       const multiplierM = Math.pow(10, expM);
-      const valueM = Math.round(scbPercentOfPopulation * (1.0-scbPercentWomen) * multiplierM);
+      const valueM = Math.round(scbPercentOfPopulation * (1.0 - scbPercentWomen) * multiplierM);
 
       if (isNaN(valueM)) {
         return 'Okänd'
@@ -194,16 +218,14 @@ export default {
 
       return `${numberFormat.format(valueM)} av ${numberFormat.format(multiplierM)}`
     },
-    userVoteValue(nameId) {
-      return this.getVoteValue(userId, nameId)
-    },
     getName: async function (nameId) {
       try {
         const nameResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/names/${nameId}`, {
           mode: 'cors',
           headers: {
-            'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
-          }})
+            ...(this.token.value ? {'Authorization': 'Bearer ' + this.token.value} : {})
+          }
+        })
         if (nameResponse.ok) {
           this.name = await nameResponse.json()
         } else {
@@ -219,11 +241,7 @@ export default {
   },
   async created() {
     await this.getName(this.$route.params.nameId)
-
-    await this.loadVotes()
-
     await this.getSimilar()
-    this.currentUserVoteValue = this.getVoteValue(userId, this.name.id)
   },
   watch: {
     async $route(to/*, from*/) {
@@ -231,7 +249,16 @@ export default {
       this.similar = null
       await this.getName(to.params.nameId)
       await this.getSimilar()
-      this.currentUserVoteValue = this.getVoteValue(userId, this.name.id)
+    },
+    'token.value': async function (newValue) {
+      const isLoggedIn = !!newValue
+      if (isLoggedIn) {
+        this.showLoginForm = false
+        if (this.pendingVoteValue !== null) {
+          this.castVote(this.pendingVoteValue)
+          this.pendingVoteValue = null
+        }
+      }
     }
   }
 }

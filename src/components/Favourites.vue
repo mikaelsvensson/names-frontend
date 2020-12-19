@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section v-if="!isLoggedIn">
+    <section v-if="!isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
           Era favoriter samlade på samma sida.
@@ -12,14 +12,11 @@
           Först måste du logga in.
         </div>
         <div class="mt-2">
-          <Login
-                  @mode="loginModeChanged($event)"
-                  :show-logout="false"
-          />
+          <Login :show-logout="false" />
         </div>
       </Notification>
     </section>
-    <section v-if="isLoggedIn">
+    <section v-if="isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
           Era favoriter samlade på samma sida.
@@ -119,7 +116,7 @@ import ComponentMixins from "@/util/ComponentMixins";
 import ListItem from "@/components/ListItem";
 import VotesMixins from "@/util/VotesMixins";
 import Loader from "@/components/Loader";
-import Login, {Modes} from "@/components/auth/Login";
+import Login from "@/components/auth/Login";
 import Notification from "@/components/Notification";
 
 const BATCH_SIZE = 100
@@ -155,6 +152,7 @@ const defaultFilters = {
 
 export default {
   name: 'Favourites',
+  inject: ['token'],
   components: {Loader, ListItem, Login, Notification},
   data: function () {
     const initialFilters = typeof this.$route.params.filters === 'string'
@@ -164,7 +162,6 @@ export default {
         : []
     return {
       isSearching: true,
-      isLoggedIn: false,
       searchResult: [],
       searchOffset: 0,
       isLast: false,
@@ -181,14 +178,6 @@ export default {
     VotesMixins
   ],
   methods: {
-    async loginModeChanged(newMode) {
-      this.isLoggedIn = newMode === Modes.LOGGED_IN
-      if (this.isLoggedIn) {
-        await this.loadVotes()
-
-        this.runSearch(this.filters)
-      }
-    },
     search: async function () {
       this.$router.replace({
         name: 'favourites',
@@ -221,7 +210,7 @@ export default {
       const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/names?${queryParams}`, {
         mode: 'cors',
         headers: {
-          'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+          'Authorization': 'Bearer ' + this.token.value
         }
       })
       if (searchResultId === searchId) {
@@ -245,19 +234,33 @@ export default {
       await this.loadNames(filters)
       this.isSearching = false
     },
+    isLoggedIn: function () {
+      return !!this.token.value
+    }
   },
   async created() {
+    if (this.isLoggedIn()) {
+      this.runSearch(this.filters)
+    }
   },
   watch: {
     'filters.overall': function () {
       this.search()
     },
+    'token.value': async function (newValue) {
+      const isLoggedIn = !!newValue
+      if (isLoggedIn) {
+        this.runSearch(this.filters)
+      }
+    },
     $route(to/*, from*/) {
-      this.runSearch((to.params.filters ?? [])
-        .reduce((filters, current) => ({
-          ...filters,
-          [current.substr(0, current.indexOf('-'))]: current.substr(current.indexOf('-') + 1)
-        }), {}))
+      this.runSearch(to.params.filters
+        ? to.params.filters
+          .reduce((filters, current) => ({
+            ...filters,
+            [current.substr(0, current.indexOf('-'))]: current.substr(current.indexOf('-') + 1)
+          }), {})
+        : this.filters ?? [])
     }
   }
 }

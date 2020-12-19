@@ -42,7 +42,8 @@ library.add(
     faRegular.faCopy,
     faSolid.faExclamationTriangle,
     faSolid.faThumbsUp,
-    faSolid.faComment
+    faSolid.faComment,
+    faSolid.faDoorOpen
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

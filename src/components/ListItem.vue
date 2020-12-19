@@ -1,112 +1,130 @@
 <template>
-  <div
-    class="search-result-item"
-  >
+  <div>
     <div
-      class="name"
+      class="search-result-item"
     >
-      <router-link :to="'/name/' + id">
-        {{ name }}
-      </router-link>
+      <div
+        class="name"
+      >
+        <router-link :to="'/name/' + id">
+          {{ name }}
+        </router-link>
 
-      <span
-        v-if="getGender() === 'MALE'"
-        class="icon-male"
-        title="Över 90 % av personerna med detta namn är män."
-      >♂</span>
-      <span
-        v-if="getGender() === 'FEMALE'"
-        title="Över 90 % av personerna med detta namn är kvinnor."
-        class="icon-female"
-      >♀</span>
-      <span
-        v-if="getGender() === 'UNISEX'"
-        title="Namnet bärs av både kvinnor och män."
-        class="icon-unisex"
-      >⚤</span>
-    </div>
-    <div class="vote-you">
-      <div class="vote-buttons">
-        <div class="buttons">
-          <b-button
-            type="is-light"
-            @click="castVote(100)"
-          >
-            <span class="icon is-small">
-              <font-awesome-icon
-                :style="{ color: 'green' }"
-                :icon="[currentUserVoteValue === 100 ? 'fa' : 'far', 'smile']"
-              />
-            </span>
-          </b-button>
-          <b-button
-            type="is-light"
-            @click="castVote(0)"
-          >
-            <span class="icon is-small">
-              <font-awesome-icon
-                :style="{ color: 'orange' }"
-                :icon="[currentUserVoteValue === 0 ? 'fa' : 'far', 'meh']"
-              />
-            </span>
-          </b-button>
-          <b-button
-            type="is-light"
-            @click="castVote(-100)"
-          >
-            <span class="icon is-small">
-              <font-awesome-icon
-                :style="{ color: 'red' }"
-                :icon="[currentUserVoteValue === -100 ? 'fa' : 'far', 'frown']"
-              />
-            </span>
-          </b-button>
+        <span
+          v-if="getGender() === 'MALE'"
+          class="icon-male"
+          title="Över 90 % av personerna med detta namn är män."
+        >♂</span>
+        <span
+          v-if="getGender() === 'FEMALE'"
+          title="Över 90 % av personerna med detta namn är kvinnor."
+          class="icon-female"
+        >♀</span>
+        <span
+          v-if="getGender() === 'UNISEX'"
+          title="Namnet bärs av både kvinnor och män."
+          class="icon-unisex"
+        >⚤</span>
+      </div>
+      <div class="vote-you">
+        <div class="vote-buttons">
+          <div class="buttons">
+            <b-button
+              type="is-light"
+              @click="castVote(100)"
+            >
+              <span class="icon is-small">
+                <font-awesome-icon
+                  :style="{ color: 'green' }"
+                  :icon="[currentUserVoteValue === 100 ? 'fa' : 'far', 'smile']"
+                />
+              </span>
+            </b-button>
+            <b-button
+              type="is-light"
+              @click="castVote(0)"
+            >
+              <span class="icon is-small">
+                <font-awesome-icon
+                  :style="{ color: 'orange' }"
+                  :icon="[currentUserVoteValue === 0 ? 'fa' : 'far', 'meh']"
+                />
+              </span>
+            </b-button>
+            <b-button
+              type="is-light"
+              @click="castVote(-100)"
+            >
+              <span class="icon is-small">
+                <font-awesome-icon
+                  :style="{ color: 'red' }"
+                  :icon="[currentUserVoteValue === -100 ? 'fa' : 'far', 'frown']"
+                />
+              </span>
+            </b-button>
+          </div>
         </div>
       </div>
+        <div
+          v-if="isPartnerVoteShown"
+          class="vote-partner"
+        >
+          <span class="icon is-small">
+            <font-awesome-icon
+              v-if="partnerVoteValue === 100"
+              :style="{ color: 'green' }"
+              :icon="[ 'far', 'smile']"
+            />
+            <font-awesome-icon
+              v-if="partnerVoteValue === 0"
+              :style="{ color: 'orange' }"
+              :icon="[ 'far', 'meh']"
+            />
+            <font-awesome-icon
+              v-if="partnerVoteValue === -100"
+              :style="{ color: 'red' }"
+              :icon="[ 'far', 'frown']"
+            />
+            <font-awesome-icon
+              v-if="partnerVoteValue === null"
+              :style="{ color: '#ccc' }"
+              :icon="[ 'fa', 'question']"
+            />
+          </span>
+        </div>
     </div>
-      <div
-        v-if="isPartnerVoteShown"
-        class="vote-partner"
-      >
-        <span class="icon is-small">
-          <font-awesome-icon
-            v-if="partnerVoteValue === 100"
-            :style="{ color: 'green' }"
-            :icon="[ 'far', 'smile']"
-          />
-          <font-awesome-icon
-            v-if="partnerVoteValue === 0"
-            :style="{ color: 'orange' }"
-            :icon="[ 'far', 'meh']"
-          />
-          <font-awesome-icon
-            v-if="partnerVoteValue === -100"
-            :style="{ color: 'red' }"
-            :icon="[ 'far', 'frown']"
-          />
-          <font-awesome-icon
-            v-if="partnerVoteValue === null"
-            :style="{ color: '#ccc' }"
-            :icon="[ 'fa', 'question']"
-          />
-        </span>
-      </div>
+    <div v-if="showLoginForm">
+      <Notification type="LOGIN">
+        <div>
+          För att rösta måste du logga in.
+        </div>
+        <div class="mt-2">
+          <Login :show-logout="false" />
+        </div>
+      </Notification>
+    </div>
   </div>
 </template>
 
 <script>
 import ComponentMixins from "@/util/ComponentMixins";
 import VotesMixins from "@/util/VotesMixins";
+import Login from "@/components/auth/Login";
+import Notification from "@/components/Notification";
 
 const UNISEX_THRESHOLD = 0.1
 
 export default {
   name: "ListItem",
+  inject: ['token'],
   data: function () {
     return {
-      updatedUserVoteValue: null
+      updatedUserVoteValue: null,
+      showLoginForm: false,
+      pendingVoteValue: null
     }
   },
+  components: {Login, Notification},
   mixins: [
     ComponentMixins,
     VotesMixins
@@ -143,9 +161,17 @@ export default {
     }
   },
   methods: {
+    isLoggedIn: function () {
+      return !!this.token.value
+    },
     castVote: async function (voteValue) {
-      if (await this.vote(this.id, voteValue)) {
-        this.updatedUserVoteValue = voteValue
+      if (this.isLoggedIn()) {
+        if (await this.vote(this.id, voteValue, this.token.value)) {
+          this.updatedUserVoteValue = voteValue;
+        }
+      } else {
+        this.showLoginForm = true
+        this.pendingVoteValue = voteValue
       }
     },
     getGender: function () {
@@ -157,6 +183,18 @@ export default {
             ? 'MALE'
             : 'UNISEX'))
         : null
+    }
+  },
+  watch: {
+    'token.value': async function (newValue) {
+      const isLoggedIn = !!newValue
+      if (isLoggedIn) {
+        this.showLoginForm = false
+        if (this.pendingVoteValue !== null) {
+          this.castVote(this.pendingVoteValue)
+          this.pendingVoteValue = null
+        }
+      }
     }
   }
 }

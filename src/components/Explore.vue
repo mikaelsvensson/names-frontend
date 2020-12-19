@@ -46,9 +46,11 @@
         class="message"
         v-if="!isFilterSpecified"
       >
-        <div class="message-body">
-          Använd sökfältet och knapparna ovan att hitta namn.
-        </div>
+        <Notification type="INFO">
+          <div>
+            Använd sökfältet och knapparna ovan att hitta namn.
+          </div>
+        </Notification>
       </article>
 
       <Loader v-if="isSearching" />
@@ -77,7 +79,7 @@
           :name="item.name"
           :id="item.id"
           :attributes="item.attributes"
-          :user-vote-value="userVoteValue(item.id)"
+          :user-vote-value="item.userVoteValue"
         />
 
         <div v-if="!isLast">
@@ -97,6 +99,7 @@
 import ComponentMixins from "@/util/ComponentMixins";
 import VotesMixins from "@/util/VotesMixins";
 import ListItem from "@/components/ListItem";
+import Notification from "@/components/Notification";
 import Loader from "@/components/Loader";
 
 const UNISEX_THRESHOLD = 0.1
@@ -177,10 +180,10 @@ const defaultFilters = {
   length: 'all'
 }
 
-
 export default {
   name: 'SearchResult',
-  components: {Loader, ListItem},
+  inject: ['token'],
+  components: {Loader, ListItem, Notification},
   data: function () {
     const initialFilters = typeof this.$route.params.filters === 'string'
       ? this.$route.params.filters.split(/\//)
@@ -240,7 +243,7 @@ export default {
       const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/names?${queryParams}`, {
         mode: 'cors',
         headers: {
-          'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+          ...(this.token.value ? {'Authorization': 'Bearer ' + this.token.value} : {})
         }})
       if (searchResultId === searchId) {
         const names = await namesResponse.json();
@@ -270,7 +273,7 @@ export default {
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+            'Authorization': 'Bearer ' + this.token.value
           },
           body: JSON.stringify({
             name: this.filters.name
@@ -278,7 +281,7 @@ export default {
         })
         if (createNameResp.ok) {
           const newName = await createNameResp.json()
-          await this.vote(newName.id, 100)
+          await this.vote(newName.id, 100, this.token.value)
           this.searchResult.push(newName)
         } else {
           console.log('💥 Failed to create name')
@@ -287,16 +290,11 @@ export default {
         console.log('💥', e)
       }
     },
-    userVoteValue(nameId) {
-      return this.getVoteValue(nameId)
-    },
   },
   mounted() {
     this.onSearchTextChange = this.debounce(this.search, 500)
   },
   async created() {
-    await this.loadVotes()
-
     this.runSearch(this.filters)
   },
   computed: {

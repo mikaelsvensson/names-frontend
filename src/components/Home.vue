@@ -30,9 +30,6 @@
         </div>
       </div>
     </section>
-    <section>
-      <Login />
-    </section>
   </div>
 </template>
 

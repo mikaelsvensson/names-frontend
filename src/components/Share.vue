@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section v-if="!isLoggedIn">
+    <section v-if="!isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
           Koppla ihop era profiler så att ni ser varandras favoriter.
@@ -12,14 +12,11 @@
           Först måste du logga in.
         </div>
         <div class="mt-2">
-          <Login
-            @mode="loginModeChanged($event)"
-            :show-logout="false"
-          />
+          <Login :show-logout="false" />
         </div>
       </Notification>
     </section>
-    <section v-if="isLoggedIn">
+    <section v-if="isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
           Koppla ihop era profiler så att ni ser varandras favoriter.
@@ -105,34 +102,24 @@
 <script>
 import Clipboard from 'clipboard/dist/clipboard.min'
 import ComponentMixins from "@/util/ComponentMixins";
-import Login, {Modes} from "@/components/auth/Login";
+import Login from "@/components/auth/Login";
 import Notification from "@/components/Notification";
 
 export default {
   name: 'Share',
+  inject: ['token'],
   components: {Login, Notification},
   data: function () {
     return {
       isQrLinkModal: false,
       isShareLinkModal: false,
-      actionId: null,
-      isLoggedIn: false
+      actionId: null
     }
   },
   mixins: [
     ComponentMixins
   ],
   methods: {
-    async loginModeChanged(newMode) {
-      this.isLoggedIn = newMode === Modes.LOGGED_IN
-      if (this.isLoggedIn) {
-        try {
-          await this.createShareLink();
-        } catch (e) {
-          console.log('💥', e)
-        }
-      }
-    },
     getQrUrl: function (actionId) {
       return `${process.env.VUE_APP_BASE_URL}/actions/${actionId}/qr`
     },
@@ -146,7 +133,7 @@ export default {
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + window.localStorage.getItem('user.token')
+            'Authorization': 'Bearer ' + this.token.value
           },
           body: JSON.stringify({
             type: 'ADD_RELATIONSHIP'
@@ -163,6 +150,9 @@ export default {
         console.log('💥', e)
       }
     },
+    isLoggedIn: function () {
+      return !!this.token.value
+    }
   },
   mounted() {
     const toaster = this.$buefy.toast
@@ -182,8 +172,26 @@ export default {
     this.clipboard.destroy()
   },
   async created() {
+    if (this.isLoggedIn()) {
+      try {
+        await this.createShareLink();
+      } catch (e) {
+        console.log('💥', e)
+      }
+    }
   },
-  watch: {}
+  watch: {
+    'token.value': async function (newValue) {
+      const isLoggedIn = !!newValue
+      if (isLoggedIn) {
+        try {
+          await this.createShareLink();
+        } catch (e) {
+          console.log('💥', e)
+        }
+      }
+    }
+  }
 }
 </script>
 

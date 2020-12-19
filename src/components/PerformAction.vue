@@ -17,10 +17,7 @@
           </div>
           <div v-if="isLoginRequired">
             <div class="mt-2">
-              <Login
-                @mode="loginModeChanged($event)"
-                :show-logout="false"
-              />
+              <Login :show-logout="false" />
             </div>
           </div>
         </Notification>
@@ -37,6 +34,7 @@ import Notification, {Types} from "@/components/Notification";
 
 export default {
   name: 'PerformAction',
+  inject: ['token'],
   components: {Login, Notification},
   data: function () {
     return {
@@ -54,19 +52,6 @@ export default {
     ComponentMixins
   ],
   methods: {
-    async loginModeChanged(newMode) {
-      if (!this.isRetried) {
-        switch (newMode) {
-        case 'LOGGED_IN':
-          try {
-            await this.performAction()
-          } catch (e) {
-            console.log('💥', e)
-          }
-          this.isRetried = true
-        }
-      }
-    },
     setMessage(type, message) {
       this.notification = { type, message }
     },
@@ -75,7 +60,7 @@ export default {
       if (actionId) {
         this.isLoading = true
         try {
-          const token = window.localStorage.getItem('user.token');
+          const token = this.token.value;
           const actionResp = await fetch(`${process.env.VUE_APP_BASE_URL}/actions/${actionId}/invocation`, {
             method: 'POST',
             mode: 'cors',
@@ -113,6 +98,9 @@ export default {
         this.setMessage(Types.ERROR, 'Oj, vi klantade oss och något gick fel.')
       }
     },
+    isLoggedIn: function () {
+      return !!this.token.value
+    }
   },
   mounted() {
   },
@@ -124,6 +112,17 @@ export default {
     }
   },
   watch: {
+    'token.value': async function (newValue) {
+      const isLoggedIn = !!newValue;
+      if (!this.isRetried && isLoggedIn) {
+        try {
+          await this.performAction()
+        } catch (e) {
+          console.log('💥', e)
+        }
+        this.isRetried = true
+      }
+    }
   }
 }
 </script>

@@ -1,14 +1,11 @@
 <template>
   <div>
-    <div v-if="mode === 'NOT_LOGGED_IN'">
+    <div v-if="!isLoggedIn()">
       <LoginFacebook
         @authenticator-data="logIn('FACEBOOK', $event)"
       />
     </div>
-    <div v-if="mode === 'LOGGED_OUT'">
-      <LoginFacebook @authenticator-data="logIn('FACEBOOK', $event)" />
-    </div>
-    <div v-if="mode === 'LOGGED_IN' && showLogout">
+    <div v-if="isLoggedIn() && showLogout">
       <b-button
         type="is-light"
         @click="logOut()"
@@ -22,17 +19,9 @@
 <script>
 import LoginFacebook from "@/components/auth/LoginFacebook";
 
-const MODE = {
-  UNKNOWN: 'UNKNOWN',
-  NOT_LOGGED_IN: 'NOT_LOGGED_IN',
-  LOGGED_IN: 'LOGGED_IN',
-  LOGGED_OUT: 'LOGGED_OUT'
-}
-
-export const Modes = Object.keys(MODE).reduce((types, key) => ({...types, [key]: key}), {})
-
 export default {
   name: "Login",
+  inject: ['token'],
   components: {LoginFacebook},
   props: {
     showLogout: {
@@ -42,27 +31,19 @@ export default {
   },
   data: function () {
     return {
-      mode: MODE.UNKNOWN
-    }
-  },
-  created: function () {
-    const token = window.localStorage.getItem('user.token');
-    if (token) {
-      this.mode = MODE.LOGGED_IN
-    } else {
-      this.mode = MODE.NOT_LOGGED_IN
     }
   },
   methods: {
     logIn: async function (authName, authData) {
       console.log(`🔑 Log in using ${authName}`)
       const token = await this.getToken(authName, authData)
-      window.localStorage.setItem('user.token', token);
-      this.mode = MODE.LOGGED_IN
+      this.token.value = token
     },
     logOut: function () {
-      window.localStorage.removeItem('user.token')
-      this.mode = MODE.LOGGED_OUT
+      this.token.value = null
+    },
+    isLoggedIn: function () {
+      return !!this.token.value
     },
     async getToken(authName, authData) {
       const tokenResp = await fetch(`${process.env.VUE_APP_BASE_URL}/token`, {
@@ -76,12 +57,6 @@ export default {
       const tokenRespBody = await tokenResp.json();
       console.log('🔑 Token returned from API')
       return tokenRespBody.token
-    }
-  },
-  watch: {
-    mode: function (newMode) {
-      this.$emit('mode', newMode)
-      console.log(`🔑 Mode changed to ${newMode}`)
     }
   }
 }
