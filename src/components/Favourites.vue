@@ -7,7 +7,7 @@
         </h2>
       </div>
 
-      <Notification type="INFO">
+      <Notification type="LOGIN">
         <div>
           Först måste du logga in.
         </div>
