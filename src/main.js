@@ -19,6 +19,8 @@ import PerformAction from "@/components/PerformAction";
 import Share from "@/components/Share";
 import Favourites from "@/components/Favourites";
 import Name from "@/components/Name";
+import AboutPrivacyPolicy from "@/components/AboutPrivacyPolicy";
+import About from "@/components/About";
 
 //
 // Buefy
@@ -74,6 +76,14 @@ const routes = [
         name: 'favourites',
         path: '/favourites/:filters*',
         component: Favourites
+    },
+    {
+        path: '/about',
+        component: About
+    },
+    {
+        path: '/about/privacy',
+        component: AboutPrivacyPolicy
     },
     {
         path: '/:actionId',
