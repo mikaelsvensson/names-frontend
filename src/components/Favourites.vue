@@ -126,7 +126,7 @@ let searchResultId = 0
 const OVERALL_FILTERS = {
   mine: {
     label: 'Mina',
-    queryParam: `votes-filter=MY_VOTES`
+    queryParam: `votes-filter=MY_FAVOURITES`
   },
   ours: {
     label: 'Bådas',
