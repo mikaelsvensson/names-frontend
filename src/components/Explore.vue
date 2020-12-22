@@ -252,7 +252,6 @@ export default {
       } else {
         console.log('💬 Ignore result')
       }
-
     },
     runSearch: async function (filters) {
       if (!this.isFilterSpecified) {
@@ -263,7 +262,7 @@ export default {
       this.searchOffset = 0
 
       this.isSearching = true
-      this.loadNames(filters)
+      await this.loadNames(filters)
       this.isSearching = false
     },
     addName: async function () {

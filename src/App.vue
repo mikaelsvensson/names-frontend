@@ -15,6 +15,9 @@
                 <b-navbar-item href="#/explore">
                   Sök
                 </b-navbar-item>
+                <b-navbar-item href="#/recommendations">
+                  Förslag
+                </b-navbar-item>
                 <b-navbar-item href="#/share">
                   Dela
                 </b-navbar-item>

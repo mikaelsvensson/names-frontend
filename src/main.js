@@ -21,6 +21,7 @@ import Favourites from "@/components/Favourites";
 import Name from "@/components/Name";
 import AboutPrivacyPolicy from "@/components/AboutPrivacyPolicy";
 import About from "@/components/About";
+import Recommendations from "@/components/Recommendations";
 
 //
 // Buefy
@@ -71,6 +72,11 @@ const routes = [
     {
         path: '/share',
         component: Share
+    },
+    {
+        name: 'recommendations',
+        path: '/recommendations/:filters*',
+        component: Recommendations
     },
     {
         name: 'favourites',

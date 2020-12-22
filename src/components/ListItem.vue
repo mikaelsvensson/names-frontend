@@ -168,6 +168,7 @@ export default {
       if (this.isLoggedIn()) {
         if (await this.vote(this.id, voteValue, this.token.value)) {
           this.updatedUserVoteValue = voteValue;
+          this.$emit('vote-cast')
         }
       } else {
         this.showLoginForm = true
