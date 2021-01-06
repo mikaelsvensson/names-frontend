@@ -34,7 +34,7 @@ import Notification, {Types} from "@/components/Notification";
 
 export default {
   name: 'PerformAction',
-  inject: ['token'],
+  inject: ['token', 'requestToken'],
   components: {Login, Notification},
   data: function () {
     return {
@@ -74,6 +74,14 @@ export default {
             const updatedAction = await actionResp.json()
             if (updatedAction.type === 'ADD_RELATIONSHIP') {
               this.setMessage(Types.SUCCESS, 'Ni kan nu se varandras favoriter.')
+            } else if (updatedAction.type === 'VERIFY_EMAIL') {
+              this.setMessage(Types.SUCCESS, '')
+              this.isRetried = true
+              await this.requestToken('EMAIL', updatedAction.token)
+
+              if (updatedAction.redirectTo) {
+                await this.$router.push(updatedAction.redirectTo)
+              }
             } else {
               this.setMessage(Types.SUCCESS, 'Klart.')
             }

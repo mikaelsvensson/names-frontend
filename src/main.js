@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 
 // Buefy:
-import {Button, Field, Input, Navbar, Modal, Radio, Toast, Skeleton} from 'buefy'
+import {Button, Field, Input, Navbar, Modal, Radio, Toast, Skeleton, Tooltip} from 'buefy'
 import '@/assets/main.scss' // import 'buefy/dist/buefy.css'
 
 // Font Awesome:
@@ -26,7 +26,7 @@ import Recommendations from "@/components/Recommendations";
 //
 // Buefy
 //
-[Button, Field, Input, Navbar, Modal, Radio, Toast, Skeleton].forEach(component => {
+[Button, Field, Input, Navbar, Modal, Radio, Toast, Skeleton, Tooltip].forEach(component => {
     Vue.use(component)
 })
 
@@ -36,6 +36,8 @@ import Recommendations from "@/components/Recommendations";
 
 library.add(
     faSolid.faQuestion,
+    faSolid.faQuestionCircle,
+    faSolid.faArrowRight,
     faSolid.faSmile,
     faRegular.faSmile,
     faSolid.faMeh,

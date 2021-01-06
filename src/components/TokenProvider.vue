@@ -5,6 +5,7 @@
 </template>
 
 <script>
+let pollTimer = null
 export default {
   name: "TokenProvider",
   data() {
@@ -17,7 +18,41 @@ export default {
   },
   provide() {
     return {
-      token: this.token
+      token: this.token,
+      requestToken: this.requestToken,
+      startPolling: this.startPolling,
+      stopPolling: this.stopPolling
+    }
+  },
+  methods: {
+    requestToken: async function (authName, authData) {
+      const tokenResp = await fetch(`${process.env.VUE_APP_BASE_URL}/token`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({provider: authName, data: authData})
+      })
+      const tokenRespBody = await tokenResp.json();
+      console.log('🔑 Token returned from API')
+      this.token.value = tokenRespBody.token
+    },
+    startPolling: function () {
+      console.log('⏱ Start polling')
+      const that = this
+      pollTimer = setInterval(function () {
+        const existingToken = window.localStorage.getItem('user.token');
+        if (existingToken) {
+          console.log('⏱ Found token')
+          that.token.value = existingToken
+          that.stopPolling()
+        }
+      }, 1000)
+    },
+    stopPolling: function () {
+      console.log('⏱ Stop polling')
+      clearInterval(pollTimer)
     }
   },
   watch: {

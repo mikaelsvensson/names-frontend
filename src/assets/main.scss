@@ -54,6 +54,8 @@ $toast-border-radius: $radius;
 
 $footer-background-color: $white;
 
+$notification-padding-ltr: 1.25rem;
+
 // Import Bulma and Buefy styles
 @import "../../node_modules/bulma/sass/utilities/_all.sass";
 @import "../../node_modules/bulma/sass/base/_all.sass";
@@ -89,5 +91,6 @@ $footer-background-color: $white;
 @import "~buefy/src/scss/utils/_all";
 @import "~buefy/src/scss/components/_radio";
 @import "~buefy/src/scss/components/_skeleton";
+@import "~buefy/src/scss/components/_tooltip";
 @import "~buefy/src/scss/components/_notices";
 
