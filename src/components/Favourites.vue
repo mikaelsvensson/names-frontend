@@ -7,24 +7,9 @@
         </h2>
       </div>
 
-      <Notification type="LOGIN">
-        <div>
-          Först måste du logga in.
-        </div>
-        <div class="mt-2">
-          <Login :show-logout="false" />
-        </div>
-      </Notification>
+      <Login :show-logout="false" />
     </section>
     <section v-if="isLoggedIn()">
-<!--
-      <div class="block">
-        <h2 class="subtitle">
-          Era favoriter samlade.
-        </h2>
-      </div>
--->
-
       <b-field>
         <b-radio-button
           v-for="item in overallOptions"
@@ -119,7 +104,6 @@ import ListItem from "@/components/ListItem";
 import VotesMixins from "@/util/VotesMixins";
 import Loader from "@/components/Loader";
 import Login from "@/components/auth/Login";
-import Notification from "@/components/Notification";
 
 const BATCH_SIZE = 100
 
@@ -155,7 +139,7 @@ const defaultFilters = {
 export default {
   name: 'Favourites',
   inject: ['token'],
-  components: {Loader, ListItem, Login, Notification},
+  components: {Loader, ListItem, Login},
   data: function () {
     const initialFilters = typeof this.$route.params.filters === 'string'
       ? this.$route.params.filters.split(/\//)

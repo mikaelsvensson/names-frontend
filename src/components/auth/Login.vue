@@ -1,5 +1,19 @@
 <template>
   <div>
+    <div
+      v-if="message"
+      class="mb-2 message-root"
+    >
+      <div class="message-icon">
+        <font-awesome-icon
+          size="2x"
+          :icon="[ 'fa', 'door-open' ]"
+        />
+      </div>
+      <div class="message-content">
+        {{ message }}
+      </div>
+    </div>
     <div v-if="!isLoggedIn()">
       <LoginFacebook
         @authenticator-data="logIn('FACEBOOK', $event)"
@@ -27,6 +41,10 @@ export default {
     showLogout: {
       default: true,
       type: Boolean
+    },
+    message: {
+      default: 'Först måste du logga in.',
+      type: String
     }
   },
   data: function () {
@@ -63,5 +81,15 @@ export default {
 </script>
 
 <style scoped>
-
+  .message-root {
+    display: flex;
+  }
+  .message-icon {
+    flex: 0;
+    opacity: 0.75;
+  }
+  .message-content {
+    flex: 1;
+    padding: 5px 0 0 15px;
+  }
 </style>

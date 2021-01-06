@@ -22,7 +22,6 @@ export default {
   },
   watch: {
     'token.value': function (newValue) {
-      console.log(`👻 Token changed to ${newValue}`)
       if (newValue) {
         window.localStorage.setItem('user.token', newValue);
       } else {

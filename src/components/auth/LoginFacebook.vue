@@ -42,7 +42,6 @@ export default {
     const that = this
 
     window.loginFacebookCallback = function (...args) {
-      console.log('👻 loginFacebookCallback', args)
       that.getLoginStatus()
     }
 
@@ -63,7 +62,6 @@ export default {
   },
   methods: {
     initDone() {
-      this.isLoading = false
       if (this.autoLogin) {
         this.getLoginStatus()
       } else {
@@ -74,14 +72,12 @@ export default {
       const that = this
       setTimeout(function () {
         const container = that.$refs.fbLoginButtonContainer ?? window.document.body;
-        console.log('🦊 Render button', container)
+        that.isLoading = false
         window.FB.XFBML.parse(container);
       }, 1)
     },
     getLoginStatus() {
       const that = this
-
-      this.isLoading = false
 
       window.FB.getLoginStatus(function (response) {
         that.handleLoginStatus(response)
@@ -93,11 +89,9 @@ export default {
       //   not_authorized:  the person is logged into Facebook, but has not logged into your app.
       //   unknown:         the person is not logged into Facebook, so you don't know if they've logged into your app or FB.logout() was called before and therefore, it cannot connect to Facebook.
 
-      console.log('🐠', response)
-
-      this.isLoading = false
       if (response.status === 'connected') {
         this.$emit('authenticator-data', response.authResponse.signedRequest)
+        this.isLoading = false
       } else {
         this.renderLoginButton()
       }

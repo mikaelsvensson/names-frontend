@@ -87,15 +87,14 @@
           </button>
         </div>
       </div>
-      <div v-if="showLoginForm" class="mt-2">
-        <Notification type="LOGIN">
-          <div>
-            För att rösta måste du logga in.
-          </div>
-          <div class="mt-2">
-            <Login :show-logout="false" />
-          </div>
-        </Notification>
+      <div
+        v-if="showLoginForm"
+        class="mt-2"
+      >
+        <Login
+          :show-logout="false"
+          message="För att rösta måste du logga in."
+        />
       </div>
     </section>
     <section class="py-4">
@@ -128,7 +127,6 @@ import ListItem from "@/components/ListItem";
 import VotesMixins from "@/util/VotesMixins";
 import Loader from "@/components/Loader";
 import Login from "@/components/auth/Login";
-import Notification from "@/components/Notification";
 
 const numberFormat = new Intl.NumberFormat('se-SV');
 
@@ -138,8 +136,7 @@ export default {
   components: {
     Loader,
     ListItem,
-    Login,
-    Notification
+    Login
   },
   data: function () {
     return {

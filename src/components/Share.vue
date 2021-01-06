@@ -7,14 +7,7 @@
         </h2>
       </div>
 
-      <Notification type="LOGIN">
-        <div>
-          Först måste du logga in.
-        </div>
-        <div class="mt-2">
-          <Login :show-logout="false" />
-        </div>
-      </Notification>
+      <Login :show-logout="false" />
     </section>
     <section v-if="isLoggedIn()">
       <div class="block">
@@ -103,12 +96,11 @@
 import Clipboard from 'clipboard/dist/clipboard.min'
 import ComponentMixins from "@/util/ComponentMixins";
 import Login from "@/components/auth/Login";
-import Notification from "@/components/Notification";
 
 export default {
   name: 'Share',
   inject: ['token'],
-  components: {Login, Notification},
+  components: {Login},
   data: function () {
     return {
       isQrLinkModal: false,
@@ -141,7 +133,6 @@ export default {
         })
         if (createActionResp.ok) {
           const newAction = await createActionResp.json()
-          console.log('💬', newAction)
           this.actionId = newAction.id
         } else {
           console.log('💥 Failed to create link')

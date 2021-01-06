@@ -65,43 +65,39 @@
           </div>
         </div>
       </div>
-        <div
-          v-if="isPartnerVoteShown"
-          class="vote-partner"
-        >
-          <span class="icon is-small">
-            <font-awesome-icon
-              v-if="partnerVoteValue === 100"
-              :style="{ color: 'green' }"
-              :icon="[ 'far', 'smile']"
-            />
-            <font-awesome-icon
-              v-if="partnerVoteValue === 0"
-              :style="{ color: 'orange' }"
-              :icon="[ 'far', 'meh']"
-            />
-            <font-awesome-icon
-              v-if="partnerVoteValue === -100"
-              :style="{ color: 'red' }"
-              :icon="[ 'far', 'frown']"
-            />
-            <font-awesome-icon
-              v-if="partnerVoteValue === null"
-              :style="{ color: '#ccc' }"
-              :icon="[ 'fa', 'question']"
-            />
-          </span>
-        </div>
+      <div
+        v-if="isPartnerVoteShown"
+        class="vote-partner"
+      >
+        <span class="icon is-small">
+          <font-awesome-icon
+            v-if="partnerVoteValue === 100"
+            :style="{ color: 'green' }"
+            :icon="[ 'far', 'smile']"
+          />
+          <font-awesome-icon
+            v-if="partnerVoteValue === 0"
+            :style="{ color: 'orange' }"
+            :icon="[ 'far', 'meh']"
+          />
+          <font-awesome-icon
+            v-if="partnerVoteValue === -100"
+            :style="{ color: 'red' }"
+            :icon="[ 'far', 'frown']"
+          />
+          <font-awesome-icon
+            v-if="partnerVoteValue === null"
+            :style="{ color: '#ccc' }"
+            :icon="[ 'fa', 'question']"
+          />
+        </span>
+      </div>
     </div>
     <div v-if="showLoginForm">
-      <Notification type="LOGIN">
-        <div>
-          För att rösta måste du logga in.
-        </div>
-        <div class="mt-2">
-          <Login :show-logout="false" />
-        </div>
-      </Notification>
+      <Login
+        :show-logout="false"
+        message="För att rösta måste du logga in."
+      />
     </div>
   </div>
 </template>
@@ -110,7 +106,6 @@
 import ComponentMixins from "@/util/ComponentMixins";
 import VotesMixins from "@/util/VotesMixins";
 import Login from "@/components/auth/Login";
-import Notification from "@/components/Notification";
 
 const UNISEX_THRESHOLD = 0.1
 
@@ -124,7 +119,7 @@ export default {
       pendingVoteValue: null
     }
   },
-  components: {Login, Notification},
+  components: {Login},
   mixins: [
     ComponentMixins,
     VotesMixins
