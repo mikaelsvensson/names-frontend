@@ -114,11 +114,11 @@ const GENDER_FILTERS = {
     queryParam: ''
   },
   girls: {
-    label: 'Flicknamn',
+    label: 'Flicka',
     queryParam: `attribute-filter=SCB_PERCENT_WOMEN:GREATER_THAN:${1 - UNISEX_THRESHOLD}`
   },
   boys: {
-    label: 'Pojknamn',
+    label: 'Pojke',
     queryParam: `attribute-filter=SCB_PERCENT_WOMEN:LESS_THAN:${UNISEX_THRESHOLD}`
   },
   unisex: {

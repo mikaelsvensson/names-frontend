@@ -3,7 +3,7 @@
     <section v-if="!isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
-          Era favoriter samlade på samma sida.
+          Här kommer du se era favoritnamn.
         </h2>
       </div>
 
@@ -17,11 +17,13 @@
       </Notification>
     </section>
     <section v-if="isLoggedIn()">
+<!--
       <div class="block">
         <h2 class="subtitle">
-          Era favoriter samlade på samma sida.
+          Era favoriter samlade.
         </h2>
       </div>
+-->
 
       <b-field>
         <b-radio-button
