@@ -41,7 +41,7 @@ export default {
 
     const that = this
 
-    window.loginFacebookCallback = function (...args) {
+    window.loginFacebookCallback = function () {
       that.getLoginStatus()
     }
 
