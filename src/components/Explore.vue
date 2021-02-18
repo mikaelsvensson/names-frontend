@@ -78,8 +78,8 @@
 
           :name="item.name"
           :id="item.id"
-          :attributes="item.attributes"
-          :user-vote-value="item.userVoteValue"
+          :user-vote-value="item.votes.selfVoteValue"
+          :percent-women="item.scb.percentWomen"
         />
 
         <div v-if="!isLast">

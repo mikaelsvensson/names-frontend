@@ -79,10 +79,10 @@
 
           :name="item.name"
           :id="item.id"
-          :attributes="item.attributes"
           is-partner-vote-shown
-          :partner-vote-value="item.partnerVoteValue"
-          :user-vote-value="item.userVoteValue"
+          :partner-vote-value="item.votes.partnerVoteValue"
+          :user-vote-value="item.votes.selfVoteValue"
+          :percent-women="item.scb.percentWomen"
         />
 
         <div v-if="!isLast">

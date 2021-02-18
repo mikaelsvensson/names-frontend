@@ -133,10 +133,6 @@ export default {
       default: '',
       type: String
     },
-    attributes: {
-      default: function () { return [] },
-      type: Array
-    },
     isPartnerVoteShown: {
       default: false,
       type: Boolean
@@ -146,6 +142,10 @@ export default {
       type: Number
     },
     partnerVoteValue: {
+      default: undefined,
+      type: Number
+    },
+    percentWomen: {
       default: undefined,
       type: Number
     }
@@ -171,7 +171,7 @@ export default {
       }
     },
     getGender: function () {
-      const ratioWomen = this.attributes.find(attr => attr.key === 'SCB_PERCENT_WOMEN')?.value;
+      const ratioWomen = this.percentWomen;
       return typeof ratioWomen !== 'undefined'
         ? (ratioWomen > (1 - UNISEX_THRESHOLD)
           ? 'FEMALE'

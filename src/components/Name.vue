@@ -112,9 +112,9 @@
           v-for="item in similar"
           :key="item.id"
           :name="item.name"
-          :attributes="item.attributes"
           :id="item.id"
-          :user-vote-value="item.userVoteValue"
+          :user-vote-value="item.votes.selfVoteValue"
+          :percent-women="item.scb.percentWomen"
         />
       </div>
     </section>
@@ -153,7 +153,7 @@ export default {
   ],
   computed: {
     currentUserVoteValue: function () {
-      return this.updatedUserVoteValue !== null ? this.updatedUserVoteValue : this.name?.userVoteValue
+      return this.updatedUserVoteValue !== null ? this.updatedUserVoteValue : this.name?.votes?.selfVoteValue
     }
   },
   methods: {
@@ -180,8 +180,8 @@ export default {
       this.similar = await similarResp.json()
     },
     getPopularityWomen: function () {
-      const scbPercentOfPopulation = this.name.attributes.find(attr => attr.key === 'SCB_PERCENT_OF_POPULATION')?.value || 0
-      const scbPercentWomen = this.name.attributes.find(attr => attr.key === 'SCB_PERCENT_WOMEN')?.value || 0
+      const scbPercentOfPopulation = this.name.scb?.percentOfPopulation || 0
+      const scbPercentWomen = this.name.scb?.percentWomen || 0
 
       if (scbPercentWomen === 0) {
         return 'Noll'
@@ -198,8 +198,8 @@ export default {
       return `${numberFormat.format(valueW)} av ${numberFormat.format(multiplierW)}`;
     },
     getPopularityMen: function () {
-      const scbPercentOfPopulation = this.name.attributes.find(attr => attr.key === 'SCB_PERCENT_OF_POPULATION')?.value || 0
-      const scbPercentWomen = this.name.attributes.find(attr => attr.key === 'SCB_PERCENT_WOMEN')?.value || 0
+      const scbPercentOfPopulation = this.name.scb?.percentOfPopulation || 0
+      const scbPercentWomen = this.name.scb?.percentWomen || 0
 
       if (scbPercentWomen === 1.0) {
         return 'Noll'
