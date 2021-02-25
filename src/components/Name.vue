@@ -10,11 +10,15 @@
         <h1 class="title">
           {{ name.name }}
         </h1>
-        <h2 class="subtitle">
-          Statistik
-        </h2>
       </div>
-
+    </section>
+    <section
+      class="py-4"
+      v-if="isInScbDataset()"
+    >
+      <h2 class="subtitle">
+        Statistik för Sverige:
+      </h2>
       <nav
         v-if="name"
         class="level"
@@ -22,9 +26,9 @@
         <div class="level-item has-text-centered">
           <div>
             <p class="heading">
-              Andel pojkar och män
+              Pojkar och män
             </p>
-            <p class="title">
+            <p class="subtitle">
               {{ getPopularityMen() }}
             </p>
           </div>
@@ -32,9 +36,9 @@
         <div class="level-item has-text-centered">
           <div>
             <p class="heading">
-              Andel flickor och kvinnor
+              Flickor och kvinnor
             </p>
-            <p class="title">
+            <p class="subtitle">
               {{ getPopularityWomen() }}
             </p>
           </div>
@@ -43,7 +47,7 @@
     </section>
     <section class="py-4">
       <h2 class="subtitle">
-        Din röst
+        Din röst:
       </h2>
       <div class="vote-buttons">
         <div class="buttons is-centered">
@@ -99,7 +103,7 @@
     </section>
     <section class="py-4">
       <h2 class="subtitle">
-        Liknande
+        Liknande namn:
       </h2>
 
       <Loader v-if="!similar" />
@@ -114,7 +118,7 @@
           :name="item.name"
           :id="item.id"
           :user-vote-value="item.votes.selfVoteValue"
-          :percent-women="item.scb.percentWomen"
+          :percent-women="item.demographics.se.percentWomen"
         />
       </div>
     </section>
@@ -128,7 +132,11 @@ import VotesMixins from "@/util/VotesMixins";
 import Loader from "@/components/Loader";
 import Login from "@/components/auth/Login";
 
-const numberFormat = new Intl.NumberFormat('se-SV');
+const numberFormat = new Intl.NumberFormat();
+
+const NBSP = '\xa0'; // Non-breakable space is char 0xa0 (160 dec)
+
+const toNumericString = (number) => numberFormat.format(number).replaceAll(',', NBSP).replace('.', ',');
 
 export default {
   name: 'Name',
@@ -166,7 +174,7 @@ export default {
           this.updatedUserVoteValue = voteValue;
         }
       } else {
-        this.showLoginForm = true
+        this.showLoginForm = true;
         this.pendingVoteValue = voteValue
       }
     },
@@ -176,12 +184,15 @@ export default {
         headers: {
           ...(this.token.value ? {'Authorization': 'Bearer ' + this.token.value} : {})
         }
-      })
+      });
       this.similar = await similarResp.json()
     },
+    isInScbDataset: function () {
+      return this.name.demographics?.se?.percentOfPopulation > 0
+    },
     getPopularityWomen: function () {
-      const scbPercentOfPopulation = this.name.scb?.percentOfPopulation || 0
-      const scbPercentWomen = this.name.scb?.percentWomen || 0
+      const scbPercentOfPopulation = this.name.demographics?.se?.percentOfPopulation || 0;
+      const scbPercentWomen = this.name.demographics?.se?.percentWomen || 0;
 
       if (scbPercentWomen === 0) {
         return 'Noll'
@@ -195,11 +206,11 @@ export default {
         return 'Okänd'
       }
 
-      return `${numberFormat.format(valueW)} av ${numberFormat.format(multiplierW)}`;
+      return `${toNumericString(valueW)} på ${toNumericString(multiplierW)}`;
     },
     getPopularityMen: function () {
-      const scbPercentOfPopulation = this.name.scb?.percentOfPopulation || 0
-      const scbPercentWomen = this.name.scb?.percentWomen || 0
+      const scbPercentOfPopulation = this.name.demographics?.se?.percentOfPopulation || 0;
+      const scbPercentWomen = this.name.demographics?.se?.percentWomen || 0;
 
       if (scbPercentWomen === 1.0) {
         return 'Noll'
@@ -213,7 +224,7 @@ export default {
         return 'Okänd'
       }
 
-      return `${numberFormat.format(valueM)} av ${numberFormat.format(multiplierM)}`
+      return `${toNumericString(valueM)} på ${toNumericString(multiplierM)}`
     },
     getName: async function (nameId) {
       try {
@@ -222,37 +233,37 @@ export default {
           headers: {
             ...(this.token.value ? {'Authorization': 'Bearer ' + this.token.value} : {})
           }
-        })
+        });
         if (nameResponse.ok) {
           this.name = await nameResponse.json()
         } else {
-          console.log('💥 Failed to fetch votes')
+          console.log('💥 Failed to fetch votes');
           this.name = null
         }
 
       } catch (e) {
-        console.log('💥', e)
+        console.log('💥', e);
         this.name = null
       }
     },
   },
   async created() {
-    await this.getName(this.$route.params.nameId)
+    await this.getName(this.$route.params.nameId);
     await this.getSimilar()
   },
   watch: {
     async $route(to/*, from*/) {
-      this.name = null
-      this.similar = null
-      await this.getName(to.params.nameId)
+      this.name = null;
+      this.similar = null;
+      await this.getName(to.params.nameId);
       await this.getSimilar()
     },
     'token.value': async function (newValue) {
-      const isLoggedIn = !!newValue
+      const isLoggedIn = !!newValue;
       if (isLoggedIn) {
-        this.showLoginForm = false
+        this.showLoginForm = false;
         if (this.pendingVoteValue !== null) {
-          this.castVote(this.pendingVoteValue)
+          this.castVote(this.pendingVoteValue);
           this.pendingVoteValue = null
         }
       }

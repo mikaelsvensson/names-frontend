@@ -82,7 +82,7 @@
           is-partner-vote-shown
           :partner-vote-value="item.votes.partnerVoteValue"
           :user-vote-value="item.votes.selfVoteValue"
-          :percent-women="item.scb.percentWomen"
+          :percent-women="item.demographics.se.percentWomen"
         />
 
         <div v-if="!isLast">

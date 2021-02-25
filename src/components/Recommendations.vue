@@ -37,7 +37,7 @@
           :name="item.name"
           :id="item.id"
           :user-vote-value="item.votes.selfVoteValue"
-          :percent-women="item.scb.percentWomen"
+          :percent-women="item.demographics.se.percentWomen"
 
           @vote-cast="registerCastVote(item.id)"
         />

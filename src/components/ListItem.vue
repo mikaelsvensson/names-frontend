@@ -172,7 +172,7 @@ export default {
     },
     getGender: function () {
       const ratioWomen = this.percentWomen;
-      return typeof ratioWomen !== 'undefined'
+      return typeof ratioWomen !== 'undefined' && ratioWomen != null
         ? (ratioWomen > (1 - UNISEX_THRESHOLD)
           ? 'FEMALE'
           : (ratioWomen < UNISEX_THRESHOLD
