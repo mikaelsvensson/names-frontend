@@ -12,39 +12,6 @@
         </h1>
       </div>
     </section>
-    <section
-      class="py-4"
-      v-if="isInScbDataset()"
-    >
-      <h2 class="subtitle">
-        Statistik för Sverige:
-      </h2>
-      <nav
-        v-if="name"
-        class="level"
-      >
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">
-              Pojkar och män
-            </p>
-            <p class="subtitle">
-              {{ getPopularityMen() }}
-            </p>
-          </div>
-        </div>
-        <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">
-              Flickor och kvinnor
-            </p>
-            <p class="subtitle">
-              {{ getPopularityWomen() }}
-            </p>
-          </div>
-        </div>
-      </nav>
-    </section>
     <section class="py-4">
       <h2 class="subtitle">
         Din röst:
@@ -101,6 +68,40 @@
         />
       </div>
     </section>
+    <section
+      class="py-4"
+      v-for="item in demographics"
+      :key="item.country"
+    >
+      <h2 class="subtitle">
+        Statistik för {{ item.labelCountry }}:
+      </h2>
+      <nav
+        v-if="name"
+        class="level"
+      >
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">
+              Pojkar och män
+            </p>
+            <p class="subtitle">
+              {{ item.labelMen }}
+            </p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">
+              Flickor och kvinnor
+            </p>
+            <p class="subtitle">
+              {{ item.labelWomen }}
+            </p>
+          </div>
+        </div>
+      </nav>
+    </section>
     <section class="py-4">
       <h2 class="subtitle">
         Liknande namn:
@@ -138,6 +139,34 @@ const NBSP = '\xa0'; // Non-breakable space is char 0xa0 (160 dec)
 
 const toNumericString = (number) => numberFormat.format(number).replaceAll(',', NBSP).replace('.', ',');
 
+const getPopularityLabel = (percentOfPopulation, genderPercent) => {
+  if (genderPercent === 0) {
+    return 'Inga'
+  }
+
+  const exp = 1 + Math.round(Math.abs(Math.log10(percentOfPopulation * (genderPercent))));
+  const multiplier = Math.pow(10, exp);
+  const value = Math.round(percentOfPopulation * (genderPercent) * multiplier);
+
+  if (exp > 6) {
+    return `Ett fåtal i landet`
+  }
+
+  if (isNaN(value)) {
+    return 'Okänt';
+  }
+
+  return `${toNumericString(value)} på ${toNumericString(multiplier)}`
+};
+
+const COUNTRY_LABELS = {
+  se: 'Sverige',
+  no: 'Norge',
+  us: 'USA',
+  dk: 'Danmark',
+  fi: 'Finland'
+};
+
 export default {
   name: 'Name',
   inject: ['token'],
@@ -162,6 +191,19 @@ export default {
   computed: {
     currentUserVoteValue: function () {
       return this.updatedUserVoteValue !== null ? this.updatedUserVoteValue : this.name?.votes?.selfVoteValue
+    },
+    demographics: function () {
+      var data = this.name?.demographics ?? {};
+      return Object.keys(data)
+        .map(country => ({
+          country,
+          labelCountry: COUNTRY_LABELS[country] ?? country,
+          percentOfPopulation: data[country].percentOfPopulation,
+          percentWomen: data[country].percentWomen,
+          labelMen: this.getPopularityMen(data[country].percentOfPopulation, data[country].percentWomen),
+          labelWomen: this.getPopularityWomen(data[country].percentOfPopulation, data[country].percentWomen)
+        }))
+        .filter(item => item.percentOfPopulation !== null)
     }
   },
   methods: {
@@ -187,44 +229,11 @@ export default {
       });
       this.similar = await similarResp.json()
     },
-    isInScbDataset: function () {
-      return this.name.demographics?.se?.percentOfPopulation > 0
+    getPopularityWomen: function (percentOfPopulation, percentWomen) {
+      return getPopularityLabel(percentOfPopulation, percentWomen);
     },
-    getPopularityWomen: function () {
-      const scbPercentOfPopulation = this.name.demographics?.se?.percentOfPopulation || 0;
-      const scbPercentWomen = this.name.demographics?.se?.percentWomen || 0;
-
-      if (scbPercentWomen === 0) {
-        return 'Noll'
-      }
-
-      const expW = 1 + Math.round(Math.abs(Math.log10(scbPercentOfPopulation * scbPercentWomen)));
-      const multiplierW = Math.pow(10, expW);
-      const valueW = Math.round(scbPercentOfPopulation * scbPercentWomen * multiplierW);
-
-      if (isNaN(valueW)) {
-        return 'Okänd'
-      }
-
-      return `${toNumericString(valueW)} på ${toNumericString(multiplierW)}`;
-    },
-    getPopularityMen: function () {
-      const scbPercentOfPopulation = this.name.demographics?.se?.percentOfPopulation || 0;
-      const scbPercentWomen = this.name.demographics?.se?.percentWomen || 0;
-
-      if (scbPercentWomen === 1.0) {
-        return 'Noll'
-      }
-
-      const expM = 1 + Math.round(Math.abs(Math.log10(scbPercentOfPopulation * (1.0 - scbPercentWomen))));
-      const multiplierM = Math.pow(10, expM);
-      const valueM = Math.round(scbPercentOfPopulation * (1.0 - scbPercentWomen) * multiplierM);
-
-      if (isNaN(valueM)) {
-        return 'Okänd'
-      }
-
-      return `${toNumericString(valueM)} på ${toNumericString(multiplierM)}`
+    getPopularityMen: function (percentOfPopulation, percentWomen) {
+      return getPopularityLabel(percentOfPopulation, 1.0 - percentWomen);
     },
     getName: async function (nameId) {
       try {
