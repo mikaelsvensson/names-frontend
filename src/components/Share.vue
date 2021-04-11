@@ -125,7 +125,7 @@ export default {
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.token.value
+            ...(this.token.value ? {'Authorization': 'Bearer ' + this.token.value} : {})
           },
           body: JSON.stringify({
             type: 'ADD_RELATIONSHIP'

@@ -36,7 +36,7 @@
 
           :name="item.name"
           :id="item.id"
-          :user-vote-value="item.votes.selfVoteValue"
+          :user-vote-value="(item.votes || {}).selfVoteValue"
           :percent-women="item.demographics.se.percentWomen"
 
           @vote-cast="registerCastVote(item.id)"
@@ -151,7 +151,7 @@ export default {
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + this.token.value
+            ...(this.token.value ? {'Authorization': 'Bearer ' + this.token.value} : {})
           }
         })
         if (resp.ok) {

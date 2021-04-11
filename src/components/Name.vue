@@ -118,7 +118,7 @@
           :key="item.id"
           :name="item.name"
           :id="item.id"
-          :user-vote-value="item.votes.selfVoteValue"
+          :user-vote-value="(item.votes || {}).selfVoteValue"
           :percent-women="item.demographics.se.percentWomen"
         />
       </div>

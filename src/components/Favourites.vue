@@ -65,8 +65,8 @@
           :name="item.name"
           :id="item.id"
           is-partner-vote-shown
-          :partner-vote-value="item.votes.partnerVoteValue"
-          :user-vote-value="item.votes.selfVoteValue"
+          :partner-vote-value="(item.votes || {}).partnerVoteValue"
+          :user-vote-value="(item.votes || {}).selfVoteValue"
           :percent-women="item.demographics.se.percentWomen"
         />
 
@@ -177,7 +177,7 @@ export default {
       const namesResponse = await fetch(`${process.env.VUE_APP_BASE_URL}/names?${queryParams}`, {
         mode: 'cors',
         headers: {
-          'Authorization': 'Bearer ' + this.token.value
+          ...(this.token.value ? {'Authorization': 'Bearer ' + this.token.value} : {})
         }
       })
       if (searchResultId === searchId) {
