@@ -73,9 +73,9 @@ export default {
           if (!this.isError) {
             const updatedAction = await actionResp.json()
             if (updatedAction.type === 'ADD_RELATIONSHIP') {
-              this.setMessage(Types.SUCCESS, 'Ni kan nu se varandras favoriter.')
+              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_add_relationship'))
             } else if (updatedAction.type === 'VERIFY_EMAIL') {
-              this.setMessage(Types.SUCCESS, '')
+              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_verify_email'))
               this.isRetried = true
               await this.requestToken('EMAIL', updatedAction.token)
 
@@ -83,19 +83,19 @@ export default {
                 await this.$router.push(updatedAction.redirectTo)
               }
             } else {
-              this.setMessage(Types.SUCCESS, 'Klart.')
+              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_generic'))
             }
           } else {
             if (actionResp.status === 404) {
-              this.setMessage(Types.INFO, 'Länken har tyvärr slutat fungera.')
+              this.setMessage(Types.INFO, this.$t('perform_action.info_link_expired'))
             } else if (actionResp.status === 401) {
-              this.setMessage(Types.INFO, 'Börja med att logga in.')
+              this.setMessage(Types.INFO, this.$t('perform_action.info_login_required'))
               this.isError = false
               this.isLoginRequired = true
             } else if (actionResp.status === 410) {
-              this.setMessage(Types.ERROR, 'Denna engångs-länk har redan använts en gång.')
+              this.setMessage(Types.ERROR, this.$t('perform_action.error_already_used'))
             } else {
-              this.setMessage(Types.ERROR, 'Oj, något gick fel.')
+              this.setMessage(Types.ERROR, this.$t('perform_action.error_unknown_status'))
             }
           }
         } catch (e) {
@@ -103,7 +103,7 @@ export default {
         }
         this.isLoading = false
       } else {
-        this.setMessage(Types.ERROR, 'Oj, vi klantade oss och något gick fel.')
+        this.setMessage(Types.ERROR, this.$t('perform_action.error_no_action'))
       }
     },
     isLoggedIn: function () {

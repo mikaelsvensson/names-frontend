@@ -3,7 +3,7 @@
     <section v-if="!isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
-          Förslag utifrån dina röster
+          {{ $t('recommendations.title') }}
         </h2>
       </div>
 
@@ -12,7 +12,7 @@
     <section v-if="isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
-          Förslag baserade på dina favoriter
+          {{ $t('recommendations.subtitle') }}
         </h2>
       </div>
 
@@ -23,7 +23,7 @@
           v-model="filters.gender"
           :native-value="item.key"
         >
-          {{ item.label }}
+          {{ $t('recommendations.gender_filters_labels.' + item.key) }}
         </b-radio-button>
       </b-field>
 
@@ -47,7 +47,7 @@
           class="mt-4"
         >
           <Notification type="INFO">
-            <div>När du röstat på alla tio förslag får du tio nya.</div>
+            <div>{{ $t('recommendations.need_more_votes') }}</div>
           </Notification>
         </div>
       </div>
@@ -70,19 +70,15 @@ let searchResultId = 0
 
 const GENDER_FILTERS = {
   all: {
-    label: 'Alla',
     queryParam: ''
   },
   girls: {
-    label: 'Flicka',
     queryParam: `attribute-filter=SCB_PERCENT_WOMEN:GREATER_THAN:${1 - UNISEX_THRESHOLD}`
   },
   boys: {
-    label: 'Pojke',
     queryParam: `attribute-filter=SCB_PERCENT_WOMEN:LESS_THAN:${UNISEX_THRESHOLD}`
   },
   unisex: {
-    label: 'Unisex',
     queryParam: `attribute-filter=SCB_PERCENT_WOMEN:GREATER_THAN:${UNISEX_THRESHOLD}&attribute-filter=SCB_PERCENT_WOMEN:LESS_THAN:${1 - UNISEX_THRESHOLD}`
   }
 }
@@ -112,7 +108,7 @@ export default {
       searchResult: [],
       votesLeft: 0,
       isLast: false,
-      genderOptions: Object.entries(GENDER_FILTERS).map(([key, {label}]) => ({key, label})),
+      genderOptions: Object.keys(GENDER_FILTERS).map(key => ({key})),
       filters: initialFilters
         .reduce((filters, current) => ({
           ...filters,

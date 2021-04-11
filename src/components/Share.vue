@@ -3,7 +3,7 @@
     <section v-if="!isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
-          Koppla ihop era profiler så att ni ser varandras favoriter.
+          {{ $t('share.subtitle') }}
         </h2>
       </div>
 
@@ -12,7 +12,7 @@
     <section v-if="isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
-          Koppla ihop era profiler så att ni ser varandras favoriter.
+          {{ $t('share.subtitle') }}
         </h2>
       </div>
       <div
@@ -20,8 +20,8 @@
         v-if="actionId"
       >
         <div class="content">
-          <h5>Alternativ 1</h5>
-          <p>Kopiera länken och skicka till din partner:</p>
+          <h5>{{ $t('share.send_link.heading') }}</h5>
+          <p>{{ $t('share.send_link.instructions') }}</p>
         </div>
         <b-field>
           <b-input
@@ -48,15 +48,15 @@
         v-if="actionId"
       >
         <div class="content">
-          <h5>Alternativ 2</h5>
+          <h5>{{ $t('share.scan_qr.heading') }}</h5>
 
           <figure class="image">
             <img :src="getQrUrl(actionId)">
           </figure>
           <p>
-            Din partner skannar QR-koden med sin mobilkamera och går till adressen som då dyker upp.
+            {{ $t('share.scan_qr.instructions') }}
           </p>
-          <p><small>QR-läsare finns i många mobilkameror, men inte alla.</small></p>
+          <p><small>{{ $t('share.scan_qr.note') }}</small></p>
         </div>
       </div>
 

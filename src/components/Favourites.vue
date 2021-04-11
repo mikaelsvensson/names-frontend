@@ -3,7 +3,7 @@
     <section v-if="!isLoggedIn()">
       <div class="block">
         <h2 class="subtitle">
-          Här kommer du se era favoritnamn.
+          {{ $t('favourites.title') }}
         </h2>
       </div>
 
@@ -17,7 +17,7 @@
           v-model="filters.overall"
           :native-value="item.key"
         >
-          {{ item.label }}
+          {{ $t('favourites.filter_labels.' + item.key) }}
         </b-radio-button>
       </b-field>
 
@@ -32,32 +32,17 @@
           class="content"
         >
           <p v-if="filters.overall === 'mine'">
-            Du har inte röstat på några favoriter ännu.
+            {{ $t('favourites.empty_list.mine') }}
           </p>
-          <div
-            v-if="filters.overall === 'ours'"
-            class="content"
-          >
-            <p>
-              Ni har tyvärr inte några gemensamma favoriter ännu.
-            </p>
-          </div>
-          <div
-            v-if="filters.overall === 'not_voted_yet'"
-            class="content"
-          >
-            <p>
-              Inga nya namn att rösta på. Du har redan röstat på alla namn som din partner röstat på.
-            </p>
-          </div>
-          <div
-            v-if="filters.overall === 'all'"
-            class="content"
-          >
-            <p>
-              Varken du eller din partner har röstat på några namn ännu.
-            </p>
-          </div>
+          <p v-if="filters.overall === 'ours'">
+            {{ $t('favourites.empty_list.ours') }}
+          </p>
+          <p v-if="filters.overall === 'not_voted_yet'">
+            {{ $t('favourites.empty_list.not_voted_yet') }}
+          </p>
+          <p v-if="filters.overall === 'all'">
+            {{ $t('favourites.empty_list.all') }}
+          </p>
         </div>
 
         <div
@@ -66,10 +51,10 @@
         >
           <div class="name" />
           <div class="vote-you">
-            Jag
+            {{ $t('favourites.vote_header.you') }}
           </div>
           <div class="vote-partner">
-            Partner
+            {{ $t('favourites.vote_header.partner') }}
           </div>
         </div>
 
@@ -90,7 +75,7 @@
             type="is-light"
             @click="loadMore()"
           >
-            Visa fler...
+            {{ $t('favourites.load_more') }}
           </b-button>
         </div>
       </div>
@@ -111,19 +96,15 @@ let searchResultId = 0
 
 const OVERALL_FILTERS = {
   mine: {
-    label: 'Mina',
     queryParam: `votes-filter=MY_FAVOURITES`
   },
   ours: {
-    label: 'Bådas',
     queryParam: `votes-filter=SHARED_FAVOURITES`
   },
   not_voted_yet: {
-    label: 'Nya',
     queryParam: `votes-filter=NEW_PARTNER_VOTES`
   },
   all: {
-    label: 'Alla röster',
     queryParam: `votes-filter=ALL_OUR_VOTES`
   }
 }
@@ -151,7 +132,7 @@ export default {
       searchResult: [],
       searchOffset: 0,
       isLast: false,
-      overallOptions: Object.entries(OVERALL_FILTERS).map(([key, {label}]) => ({key, label})),
+      overallOptions: Object.keys(OVERALL_FILTERS).map(key => ({key})),
       filters: initialFilters
         .reduce((filters, current) => ({
           ...filters,

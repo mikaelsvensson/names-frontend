@@ -3,6 +3,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
 
+// I18n:
+import VueI18n from 'vue-i18n'
+import messagesEn from './locales/en'
+import messagesSv from './locales/sv'
+
 // Buefy:
 import {Button, Field, Input, Navbar, Modal, Radio, Toast, Skeleton, Tooltip} from 'buefy'
 import '@/assets/main.scss' // import 'buefy/dist/buefy.css'
@@ -99,10 +104,26 @@ const routes = [
     }
 ]
 
+Vue.use(VueI18n)
+
+const DEFAULT_LOCALE = 'en'
+
+const locales = {
+    [DEFAULT_LOCALE]: messagesEn,
+    sv: messagesSv
+};
+
+const userLocale = (navigator.language || navigator.userLanguage || 'xx').substr(0, 2)
+
+const i18n = new VueI18n({
+    locale: Object.keys(locales).includes(userLocale) ? userLocale : DEFAULT_LOCALE,
+    messages: locales
+})
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-    routes // short for `routes: routes`
+    routes
 })
 
 
@@ -110,6 +131,7 @@ Vue.config.productionTip = false
 
 new Vue({
     router,
+    i18n,
     render: h => h(App),
     components: {App}
 }).$mount('#app')

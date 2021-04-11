@@ -10,19 +10,19 @@
                   tag="router-link"
                   :to="{ path: '/' }"
                 >
-                  Hem
+                  {{ $t('navbar.home') }}
                 </b-navbar-item>
                 <b-navbar-item href="#/explore">
-                  Sök
+                  {{ $t('navbar.explore') }}
                 </b-navbar-item>
                 <b-navbar-item href="#/recommendations">
-                  Förslag
+                  {{ $t('navbar.recommendations') }}
                 </b-navbar-item>
                 <b-navbar-item href="#/share">
-                  Dela
+                  {{ $t('navbar.share') }}
                 </b-navbar-item>
                 <b-navbar-item href="#/favourites">
-                  Favoriter
+                  {{ $t('navbar.favourites') }}
                 </b-navbar-item>
               </template>
 
@@ -58,7 +58,6 @@
         </div>
       </section>
       <Footer />
-
     </TokenProvider>
   </div>
 </template>

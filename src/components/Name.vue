@@ -14,7 +14,7 @@
     </section>
     <section class="py-4">
       <h2 class="subtitle">
-        Din röst:
+        {{ $t('name.your_vote.title') }}
       </h2>
       <div class="vote-buttons">
         <div class="buttons is-centered">
@@ -64,7 +64,7 @@
       >
         <Login
           :show-logout="false"
-          message="För att rösta måste du logga in."
+          :message="$t('name.login_message')"
         />
       </div>
     </section>
@@ -74,7 +74,7 @@
       :key="item.country"
     >
       <h2 class="subtitle">
-        Statistik för {{ item.labelCountry }}:
+        {{ $t('name.stats_for.title', { region: $t('name.stats_for.region.' + item.country) }) }}
       </h2>
       <nav
         v-if="name"
@@ -83,7 +83,7 @@
         <div class="level-item has-text-centered">
           <div>
             <p class="heading">
-              Pojkar och män
+              {{ $t('name.gender.men')}}
             </p>
             <p class="subtitle">
               {{ item.labelMen }}
@@ -93,7 +93,7 @@
         <div class="level-item has-text-centered">
           <div>
             <p class="heading">
-              Flickor och kvinnor
+              {{ $t('name.gender.women')}}
             </p>
             <p class="subtitle">
               {{ item.labelWomen }}
@@ -104,7 +104,7 @@
     </section>
     <section class="py-4">
       <h2 class="subtitle">
-        Liknande namn:
+        {{ $t('name.similar.title') }}
       </h2>
 
       <Loader v-if="!similar" />
@@ -159,14 +159,6 @@ const getPopularityLabel = (percentOfPopulation, genderPercent) => {
   return `${toNumericString(value)} på ${toNumericString(multiplier)}`
 };
 
-const COUNTRY_LABELS = {
-  se: 'Sverige',
-  no: 'Norge',
-  us: 'USA',
-  dk: 'Danmark',
-  fi: 'Finland'
-};
-
 export default {
   name: 'Name',
   inject: ['token'],
@@ -197,7 +189,6 @@ export default {
       return Object.keys(data)
         .map(country => ({
           country,
-          labelCountry: COUNTRY_LABELS[country] ?? country,
           percentOfPopulation: data[country].percentOfPopulation,
           percentWomen: data[country].percentWomen,
           labelMen: this.getPopularityMen(data[country].percentOfPopulation, data[country].percentWomen),

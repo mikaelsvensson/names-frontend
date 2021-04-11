@@ -1,0 +1,212 @@
+{
+  "navbar": {
+    "home": "Hem",
+    "explore":"Sök",
+    "recommendations": "Förslag",
+    "share":"Dela",
+    "favourites": "Favoriter"
+  },
+  "home": {
+    "title": "Vad ska barnet heta?",
+    "subtitle": "Upptäck vilka namn ni båda gillar.",
+    "getting_started": {
+      "intro": "Det är enkelt att komma igång:",
+      "step_1": {
+        "sentence": "Hitta några egna favoriter på {link}.",
+        "link": "söksidan"
+      },
+      "step_2": {
+        "sentence": "{link} med din partner.",
+        "link": "Dela en personlig länk"
+      },
+      "step_3": {
+        "sentence": "Klart. Nu kan ni båda {link}.",
+        "link": "se varandras favoriter"
+      }
+    },
+    "random_names": {
+      "intro": "Ett par namn att börja med:",
+      "load_more": "Ge mig några till..."
+    }
+  },
+  "about": {
+    "title": "Om sidan",
+    "paragraph_1": "På den här sidan kan ni som blivande föräldrar hitta ett namn till ert barn.",
+    "paragraph_2": "Tanken är att underlätta för föräldrar som har svårt att hitta namn som de båda gillar. Vardera förälder loggar in och röstar på sina egna favoriter och så visar sidan vilka namn som båda gillar.",
+    "paragraph_3": "Tjänsten är gratis att använda.",
+    "paragraph_4": "Tjänsten drivs och utvecklas av Mikael Svensson.",
+    "privacy_policy": {
+      "sentence": "{link}",
+      "link": "Information om hur tjänsten hanterar användarnas data"
+    }
+  },
+  "privacy_policy": {
+    "title": "Dataskydd",
+    "subtitle": "Vad den här sidan gör och inte gör.",
+    "content": {
+      "section_1": {
+        "heading": "Hur din data används",
+        "paragraph_1": "Av integritetsskäl så sparas så lite information om dig som möjligt. Vi lagrar bara tillräckligt med data för att sidan ska fungera.",
+        "paragraph_2": "Några exempel på vad vi inte använder din data till:",
+        "example_1": "vi skickar inte din data till andra organisationer,",
+        "example_2": "vi lagrar inte lösenord eller andra känsliga uppgifter,",
+        "example_3": "vi använder inte dina dat för att visa reklam,",
+        "example_4": "vi skickar inte reklam via e-post,"
+      },
+      "section_2": {
+        "heading": "Begär en kopia av dina data",
+        "paragraph_1": "Om du vill ha ut en kopia av dina data så skickar du ett brev till namn@mikaelsvensson.info."
+      },
+      "section_3": {
+        "heading": "Radera dina data",
+        "paragraph_1": "Om du vill ta bort dina data, inkluderat alla dina namnröster, så skickar du ett brev till namn@mikaelsvensson.info."
+      }
+    }
+  },
+  "login": {
+    "logout": "Logga ut",
+    "login_required": "Först måste du logga in."
+  },
+  "login_email": {
+    "sending_link": "Nu skickar vi en länk till dig...",
+    "check_inbox": {
+      "sentence": "{strong_1} för att hitta mejlet vi skickat. {strong_2} för att logga in.",
+      "strong_1": "Gå till din inkorg",
+      "strong_2": "Klicka sedan på länken i mejlet"
+    },
+    "wait_a_few_minutes": "Om du inte fått brevet inom ett par minuter så kan du försöka igen.",
+    "error": {
+      "paragraph_1": "Oj, något gick fel.",
+      "paragraph_2": "Vi kunde inte skicka inloggningslänken till dig.",
+      "paragraph_3": "Försök gärna igen om några minuter."
+    },
+    "login_without_password": "Logga in utan lösenord",
+    "instructions": {
+      "sentence": "Du får en {strong_1} när du vill logga in. Klicka på länken för att logga in. {strong_2}",
+      "strong_1": "länk via e-post",
+      "strong_2": "Lösenord behövs inte."
+    }
+  },
+  "explore": {
+    "input_field_name": {
+      "placeholder": "Sök efter namn..."
+    },
+    "no_filters_note": "Använd sökfältet och knapparna ovan att hitta namn.",
+    "no_results": {
+      "paragraph_1": "Det var ett ovanligt namn.",
+      "paragraph_2": {
+        "sentence": "{save_name_link}. Bara du och din partner kommer se detta namn.",
+        "save_name_link": "Spara {name} som ett namn du gillar"
+      }
+    },
+    "load_more": "Visa fler...",
+    "gender_filters_labels": {
+      "all": "Alla",
+      "girls": "Flicka",
+      "boys": "Pojke",
+      "unisex": "Unisex"
+    },
+    "popularity_filters_labels": {
+      "all": "Alla",
+      "common": "Vanligt",
+      "between": "Varken eller",
+      "uncommon": "Ovanligt"
+    },
+    "length_filters_labels": {
+      "all": "Alla",
+      "short": "Korta",
+      "medium": "Medel",
+      "long": "Långa"
+    }
+  },
+  "favourites": {
+    "title": "Här kommer du se era favoritnamn.",
+    "empty_list": {
+      "mine": "Du har inte röstat på några favoriter ännu.",
+      "ours": "Ni har tyvärr inte några gemensamma favoriter ännu.",
+      "not_voted_yet": "Inga nya namn att rösta på. Du har redan röstat på alla namn som din partner röstat på.",
+      "all": "Varken du eller din partner har röstat på några namn ännu."
+    },
+    "vote_header": {
+      "you": "Jag",
+      "partner": "Partner"
+    },
+    "filter_labels": {
+      "mine": "Dina",
+      "ours": "Bådas",
+      "not_voted_yet": "Nya",
+      "all": "Alla röster"
+    },
+    "load_more": "Visa fler..."
+  },
+  "list_item": {
+    "gender_description": {
+      "male": "Över 90 % av personerna med detta namn är män.",
+      "female": "Över 90 % av personerna med detta namn är kvinnor.",
+      "unisex": "Namnet bärs av både kvinnor och män."
+    },
+    "login_message": "För att rösta måste du logga in."
+  },
+  "name": {
+    "your_vote": {
+      "title": "Din röst:"
+    },
+    "similar": {
+      "title": "Liknande namn:"
+    },
+    "stats_for": {
+      "title": "Statistik för {region}",
+      "region": {
+        "dk": "Danmark",
+        "fi": "Finland",
+        "no": "Norge",
+        "se": "Sverige",
+        "us": "USA"
+      },
+      "gender": {
+        "men": "Pojkar och män",
+        "women": "Flickor och kvinnor"
+      },
+      "popularity": {
+        "none": "Inga",
+        "few": "Ett fåtal i landet",
+        "unknown": "Okänt",
+        "out_of": "{value} på {interval}"
+      }
+    },
+    "login_message": "För att rösta måste du logga in."
+  },
+  "perform_action": {
+    "success_add_relationship": "Ni kan nu se varandras favoriter.",
+    "success_verify_email": "",
+    "success_generic": "Klart.",
+    "info_link_expired": "Länken har tyvärr slutat fungera.",
+    "info_login_required": "Börja med att logga in.",
+    "error_already_used": "Denna engångs-länk har redan använts en gång.",
+    "error_unknown_status": "Oj, något gick fel.",
+    "error_no_action": "Oj, vi klantade oss och något gick fel."
+  },
+  "recommendations": {
+    "title": "Förslag utifrån dina röster",
+    "subtitle": "Förslag baserade på dina favoriter",
+    "need_more_votes": "När du röstat på alla tio förslag får du tio nya.",
+    "gender_filters_labels": {
+      "all": "Alla",
+      "girls": "Flicka",
+      "boys": "Pojke",
+      "unisex": "Unisex"
+    }
+  },
+  "share": {
+    "subtitle": "Koppla ihop era profiler så att ni ser varandras favoriter.",
+    "send_link": {
+      "heading": "Alternativ 1",
+      "instructions": "Kopiera länken och skicka till din partner:"
+    },
+    "scan_qr": {
+      "heading": "Alternativ 2",
+      "instructions": "Din partner skannar QR-koden med sin mobilkamera och går till adressen som då dyker upp.",
+      "note": "QR-läsare finns i många mobilkameror, men inte alla."
+    }
+  }
+}

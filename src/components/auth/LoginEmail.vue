@@ -1,7 +1,7 @@
 <template>
   <div class="b-tooltips">
     <div v-if="isLoading">
-      <p>Nu skickar vi en länk till dig...</p>
+      <p>{{ $t('login_email.sending_link') }}</p>
       <b-skeleton
         width="100%"
         animated
@@ -12,16 +12,28 @@
       class="mb-4"
     >
       <div v-if="isSuccess">
-        <p>
-          <strong>Gå till din inkorg</strong> för att hitta mejlet vi skickat.
-          <strong>Klicka sedan på länken i mejlet</strong> för att logga in.
-        </p>
-        <p>Om du inte fått brevet inom ett par minuter så kan du försöka igen.</p>
+        <i18n
+          path="login_email.check_inbox.sentence"
+          tag="p"
+        >
+          <template #strong_1>
+            <strong
+              v-html="$t('login_email.check_inbox.strong_1')"
+            />
+          </template>
+          <template #strong_2>
+            <strong
+              v-html="$t('login_email.check_inbox.strong_2')"
+            />
+          </template>
+        </i18n>
+
+        <p>{{ $t('login_email.wait_a_few_minutes') }}</p>
       </div>
       <div v-if="!isSuccess">
-        <p><strong>Oj, något gick fel.</strong></p>
-        <p>Vi kunde inte skicka inloggningslänken till dig.</p>
-        <p>Försök gärna igen om några minuter.</p>
+        <p><strong>{{ $t('login_email.error.paragraph_1') }}</strong></p>
+        <p>{{ $t('login_email.error.paragraph_2') }}</p>
+        <p>{{ $t('login_email.error.paragraph_3') }}</p>
       </div>
     </div>
     <div v-if="!isLoading">
@@ -30,7 +42,7 @@
         style="display: flex"
       >
         <div style="flex: 1">
-          <p>Logga in utan lösenord</p>
+          <p>{{ $t('login_email.login_without_password') }}</p>
         </div>
         <div style="flex: 0">
           <b-tooltip
@@ -44,9 +56,18 @@
             />
             <template v-slot:content>
               <div class="has-text-left">
-                Du får en <strong>länk via e-post</strong> när du vill logga in.
-                Klicka på länken för att logga in.
-                <strong>Lösenord behövs inte.</strong>
+                <i18n path="login_email.instructions.sentence">
+                  <template #strong_1>
+                    <strong
+                      v-html="$t('login_email.instructions.strong_1')"
+                    />
+                  </template>
+                  <template #strong_2>
+                    <strong
+                      v-html="$t('login_email.instructions.strong_2')"
+                    />
+                  </template>
+                </i18n>
               </div>
             </template>
           </b-tooltip>

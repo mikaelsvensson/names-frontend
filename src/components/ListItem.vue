@@ -12,17 +12,17 @@
 
         <span
           v-if="getGender() === 'MALE'"
+          :title="$t('list_item.gender_description.male')"
           class="icon-male"
-          title="Över 90 % av personerna med detta namn är män."
         >♂</span>
         <span
           v-if="getGender() === 'FEMALE'"
-          title="Över 90 % av personerna med detta namn är kvinnor."
+          :title="$t('list_item.gender_description.female')"
           class="icon-female"
         >♀</span>
         <span
           v-if="getGender() === 'UNISEX'"
-          title="Namnet bärs av både kvinnor och män."
+          :title="$t('list_item.gender_description.unisex')"
           class="icon-unisex"
         >⚤</span>
       </div>
@@ -96,7 +96,7 @@
     <div v-if="showLoginForm">
       <Login
         :show-logout="false"
-        message="För att rösta måste du logga in."
+        :message="$t('list_item.login_message')"
       />
     </div>
   </div>

@@ -3,34 +3,29 @@
     <section>
       <div class="block">
         <h2 class="title">
-          Privacy Policy
+          {{ $t('privacy_policy.title') }}
         </h2>
         <h2 class="subtitle">
-          What this site does and does not.
+          {{ $t('privacy_policy.subtitle') }}
         </h2>
       </div>
 
       <div class="content">
-        <h2>How We Use Your Data</h2>
-        <p>
-          For privacy reasons, we save as little data about you as possible. We store just enough data to
-          provide you with the site's functionality and to authenticate you.
-        </p>
-        <p>Some examples what what we <em>don't</em> use your data for:</p>
+        <h2>{{ $t('privacy_policy.content.section_1.heading') }}</h2>
+        <p>{{ $t('privacy_policy.content.section_1.paragraph_1') }}</p>
+        <p>{{ $t('privacy_policy.content.section_1.paragraph_2') }}</p>
         <ul>
-          <li>we <em>do not</em> send your data to other organizations,</li>
-          <li>we <em>do not</em> store your credentials or other sensitive data.</li>
-          <li>we <em>do not</em> use your data to show ads,</li>
-          <li>we <em>do not</em> send you marketing emails,</li>
+          <li>{{ $t('privacy_policy.content.section_1.example_1') }}</li>
+          <li>{{ $t('privacy_policy.content.section_1.example_2') }}</li>
+          <li>{{ $t('privacy_policy.content.section_1.example_3') }}</li>
+          <li>{{ $t('privacy_policy.content.section_1.example_4') }}</li>
         </ul>
-        <h2>Get a Copy of Your Data</h2>
-        <p>
-          If you want to request a copy of data we have about you, then send your request to namn@mikaelsvensson.info.
-        </p>
-        <h2>Delete Your Data</h2>
-        <p>
-          If you want to delete your account, including all your votes, then send your request to namn@mikaelsvensson.info.
-        </p>
+
+        <h2>{{ $t('privacy_policy.content.section_2.heading') }}</h2>
+        <p>{{ $t('privacy_policy.content.section_2.paragraph_1') }}</p>
+
+        <h2>{{ $t('privacy_policy.content.section_3.heading') }}</h2>
+        <p>{{ $t('privacy_policy.content.section_3.paragraph_1') }}</p>
       </div>
     </section>
   </div>

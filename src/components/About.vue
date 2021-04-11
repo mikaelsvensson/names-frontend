@@ -3,26 +3,35 @@
     <section>
       <div class="block">
         <h1 class="title">
-          Om sidan
+          {{ $t('about.title') }}
         </h1>
       </div>
 
       <div class="content">
         <p>
-          På den här sidan kan ni som blivande föräldrar hitta ett namn till ert barn.
+          {{ $t('about.paragraph_1') }}
         </p>
         <p>
-          Tanken är att underlätta för föräldrar som har svårt att hitta namn som de båda gillar. Vardera
-          förälder loggar in och röstar på sina egna favoriter och så visar sidan vilka namn som båda gillar.
+          {{ $t('about.paragraph_2') }}
         </p>
         <p>
-          Tjänsten är gratis att använda.
+          {{ $t('about.paragraph_3') }}
         </p>
         <p>
-          Tjänsten drivs och utvecklas av Mikael Svensson.
+          {{ $t('about.paragraph_4') }}
         </p>
         <p>
-          <router-link to="/about/privacy">Information om hur tjänsten hanterar användarnas data</router-link>
+          <i18n
+            tag="p"
+            path="about.privacy_policy.sentence"
+          >
+            <template #link>
+              <router-link
+                to="/about/privacy"
+                v-html="$t('about.privacy_policy.link')"
+              />
+            </template>
+          </i18n>
         </p>
       </div>
     </section>

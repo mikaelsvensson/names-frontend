@@ -2,8 +2,8 @@
   <footer class="footer">
     <div class="content has-text-centered">
       <p class="is-size-7">
-        <router-link to="/about">Om sidan</router-link>.
-        <router-link to="/about/privacy">Privacy Policy</router-link>.
+        <router-link to="/about">{{ $t('about.title') }}</router-link>.
+        <router-link to="/about/privacy">{{ $t('privacy_policy.title') }}</router-link>.
       </p>
       <b-button
         v-if="token.value"
@@ -11,7 +11,7 @@
         type="is-text"
         @click="logOut()"
       >
-        Logga ut
+        {{ $t('login.logout') }}
       </b-button>
     </div>
   </footer>

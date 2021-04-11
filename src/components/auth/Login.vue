@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      v-if="message"
+      v-if="translatedMessage"
       class="mb-2 message-root"
     >
       <div class="message-icon">
@@ -11,7 +11,7 @@
         />
       </div>
       <div class="message-content">
-        {{ message }}
+        {{ translatedMessage }}
       </div>
     </div>
     <div v-if="!isLoggedIn()">
@@ -33,7 +33,7 @@
         type="is-light"
         @click="logOut()"
       >
-        Logga ut
+        {{ $t('login.logout') }}
       </b-button>
     </div>
   </div>
@@ -53,13 +53,12 @@ export default {
       type: Boolean
     },
     message: {
-      default: 'Först måste du logga in.',
+      default: null,
       type: String
     }
   },
   data: function () {
-    return {
-    }
+    return {}
   },
   methods: {
     logIn: async function (authName, authData) {
@@ -72,20 +71,27 @@ export default {
     isLoggedIn: function () {
       return !!this.token.value
     }
+  },
+  computed: {
+    translatedMessage: function () {
+      return this.message || this.$t('login.login_required')
+    }
   }
 }
 </script>
 
 <style scoped>
-  .message-root {
-    display: flex;
-  }
-  .message-icon {
-    flex: 0;
-    opacity: 0.75;
-  }
-  .message-content {
-    flex: 1;
-    padding: 5px 0 0 15px;
-  }
+    .message-root {
+        display: flex;
+    }
+
+    .message-icon {
+        flex: 0;
+        opacity: 0.75;
+    }
+
+    .message-content {
+        flex: 1;
+        padding: 5px 0 0 15px;
+    }
 </style>

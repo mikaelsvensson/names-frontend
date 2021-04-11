@@ -1,0 +1,212 @@
+{
+  "navbar": {
+    "home": "Home",
+    "explore": "Find",
+    "recommendations": "Recommend",
+    "share": "Share",
+    "favourites": "Best"
+  },
+  "home": {
+    "title": "What to call the baby?",
+    "subtitle": "Discover names you both fancy.",
+    "getting_started": {
+      "intro": "Get started right away:",
+      "step_1": {
+        "sentence": "Find good names by {link}.",
+        "link": "exploring"
+      },
+      "step_2": {
+        "sentence": "{link} with your partner.",
+        "link": "Share an invite"
+      },
+      "step_3": {
+        "sentence": "Done. Now you can see {link}.",
+        "link": "each others favourites"
+      }
+    },
+    "random_names": {
+      "intro": "A few names to get started:",
+      "load_more": "Give me some more..."
+    }
+  },
+  "about": {
+    "title": "About",
+    "paragraph_1": "This pages makes it easier for you as expecting parents to find a name for your baby.",
+    "paragraph_2": "The idea is to make it easier for you to find a name both of you like. Each parent signs in and votes for their favourites and then you will see your shared favourites.",
+    "paragraph_3": "The service is free to use.",
+    "paragraph_4": "The service is provided and developed by Mikael Svensson.",
+    "privacy_policy": {
+      "sentence": "{link}",
+      "link": "Information about how personal data is handled"
+    }
+  },
+  "privacy_policy": {
+    "title": "Privacy Policy",
+    "subtitle": "What this site does and does not.",
+    "content": {
+      "section_1": {
+        "heading": "How Your Data Is Used",
+        "paragraph_1": "For privacy reasons, we save as little data about you as possible. We store just enough data to provide you with the site's functionality.",
+        "paragraph_2": "Some examples what what we don't use your data for:",
+        "example_1": "we do not send your data to other organizations,",
+        "example_2": "we do not store your credentials or other sensitive data.",
+        "example_3": "we do not use your data to show ads,",
+        "example_4": "we do not send you marketing emails,"
+      },
+      "section_2": {
+        "heading": "Get a Copy of Your Data",
+        "paragraph_1": "If you want to request a copy of data we have about you, then send your request to namn@mikaelsvensson.info."
+      },
+      "section_3": {
+        "heading": "Delete Your Data",
+        "paragraph_1": "If you want to delete your account, including all your votes, then send your request to namn@mikaelsvensson.info."
+      }
+    }
+  },
+  "login": {
+    "logout": "Log out",
+    "login_required": "You need to log in"
+  },
+  "login_email": {
+    "sending_link": "We're sending a link to you...",
+    "check_inbox": {
+      "sentence": "{strong_1} to find the mail we just sent you. {strong_2} to log in.",
+      "strong_1": "Check your inbox",
+      "strong_2": "Then click the link in the mail"
+    },
+    "wait_a_few_minutes": "You can try again if you haven't received the email in a few minutes.",
+    "error": {
+      "paragraph_1": "Oops, something went wrong.",
+      "paragraph_2": "We couldn't send you the log-in link.",
+      "paragraph_3": "Please try again in a few minutes."
+    },
+    "login_without_password": "Log in without password",
+    "instructions": {
+      "sentence": "You'll get a {strong_1} when you want to log in. Click the link to log in. {strong_2}",
+      "strong_1": "link via mail",
+      "strong_2": "No password necessary."
+    }
+  },
+  "explore": {
+    "input_field_name": {
+      "placeholder": "Find namn..."
+    },
+    "no_filters_note": "Use the search field and buttons above to find names.",
+    "no_results": {
+      "paragraph_1": "That is an unusual name.",
+      "paragraph_2": {
+        "sentence": "{save_name_link}. Only you and your partner will see this name.",
+        "save_name_link": "Save {name} as a name you like"
+      }
+    },
+    "load_more": "Show more...",
+    "gender_filters_labels": {
+      "all": "All",
+      "girls": "Girl",
+      "boys": "Boy",
+      "unisex": "Unisex"
+    },
+    "popularity_filters_labels": {
+      "all": "All",
+      "common": "Common",
+      "between": "Neither nor",
+      "uncommon": "Unusual"
+    },
+    "length_filters_labels": {
+      "all": "All",
+      "short": "Short",
+      "medium": "Neither nor",
+      "long": "Long"
+    }
+  },
+  "favourites": {
+    "title": "He you'll see your favourite names.",
+    "empty_list": {
+      "mine": "You haven't voted on any favourite names yet.",
+      "ours": "You don't have any favourites in common yet.",
+      "not_voted_yet": "No new to vote on. You have voted on all names your partner has voted on.",
+      "all": "Neither you nor your partner has voted on any names yet."
+    },
+    "vote_header": {
+      "you": "You",
+      "partner": "Partner"
+    },
+    "filter_labels": {
+      "mine": "Yours",
+      "ours": "Shared",
+      "not_voted_yet": "New",
+      "all": "All votes"
+    },
+    "load_more": "Show more..."
+  },
+  "list_item": {
+    "gender_description": {
+      "male": "More than 90% of people with this name are men.",
+      "female": "More than 90% of people with this name are women.",
+      "unisex": "Both men and women have this name."
+    },
+    "login_message": "You must log in to vote."
+  },
+  "name": {
+    "your_vote": {
+      "title": "Your vote:"
+    },
+    "similar": {
+      "title": "Similar names:"
+    },
+    "stats_for": {
+      "title": "Statistics for {region}",
+      "region": {
+        "dk": "Denmark",
+        "fi": "Finland",
+        "no": "Norway",
+        "se": "Sweden",
+        "us": "USA"
+      },
+      "gender": {
+        "men": "Boys and men",
+        "women": "Girls and women"
+      },
+      "popularity": {
+        "none": "None",
+        "few": "Only a few",
+        "unknown": "Unknown",
+        "out_of": "{value} out of {interval}"
+      }
+    },
+    "login_message": "You must log in to vote."
+  },
+  "perform_action": {
+    "success_add_relationship": "You can now see each others favourites.",
+    "success_verify_email": "",
+    "success_generic": "Done.",
+    "info_link_expired": "The link has expired.",
+    "info_login_required": "Start by logging in.",
+    "error_already_used": "This one-time link has already been used once.",
+    "error_unknown_status": "Oops, something went wrong.",
+    "error_no_action": "Our bad. We made a mistake and something went wrong."
+  },
+  "recommendations": {
+    "title": "Suggestions based on your votes",
+    "subtitle": "Basd on your favourites",
+    "need_more_votes": "When you've voted for all ten you get ten more.",
+    "gender_filters_labels": {
+      "all": "All",
+      "girls": "Girl",
+      "boys": "Boy",
+      "unisex": "Unisex"
+    }
+  },
+  "share": {
+    "subtitle": "Link your profiles to see each others favourites.",
+    "send_link": {
+      "heading": "Option 1",
+      "instructions": "Copy this link and send it to your partner:"
+    },
+    "scan_qr": {
+      "heading": "Option 2",
+      "instructions": "Your partner scans this QR code with their phone camera and visits the link that pops up.",
+      "note": "QR reader is build-in to most, but not all, phone cameras."
+    }
+  }
+}

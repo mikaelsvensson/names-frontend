@@ -3,36 +3,46 @@
     <section>
       <div class="block">
         <h1 class="title">
-          Vad ska barnet heta?
+          {{ $t('home.title') }}
         </h1>
         <h2 class="subtitle">
-          Upptäck vilka namn ni båda gillar.
+          {{ $t('home.subtitle') }}
         </h2>
       </div>
 
       <div class="box">
         <div class="content">
-          <p>Det är enkelt att komma igång:</p>
+          <p>{{ $t('home.getting_started.intro') }}</p>
           <ol>
             <li>
-              Hitta några egna favoriter på
-              <router-link to="/explore">
-                söksidan
-              </router-link>
-              .
+              <i18n path="home.getting_started.step_1.sentence">
+                <template #link>
+                  <router-link
+                    to="/explore"
+                    v-html="$t('home.getting_started.step_1.link')"
+                  />
+                </template>
+              </i18n>
             </li>
             <li>
-              <router-link to="/share">
-                Dela en personlig länk
-              </router-link>
-              med din partner.
+              <i18n path="home.getting_started.step_2.sentence">
+                <template #link>
+                  <router-link
+                    to="/share"
+                    v-html="$t('home.getting_started.step_2.link')"
+                  />
+                </template>
+              </i18n>
             </li>
             <li>
-              Klart. Nu kan ni båda
-              <router-link to="/favourites">
-                se varandras favoriter
-              </router-link>
-              .
+              <i18n path="home.getting_started.step_3.sentence">
+                <template #link>
+                  <router-link
+                    to="/favourites"
+                    v-html="$t('home.getting_started.step_3.link')"
+                  />
+                </template>
+              </i18n>
             </li>
           </ol>
         </div>
@@ -40,7 +50,7 @@
 
       <div class="box">
         <div class="content">
-          <p>Ett par namn att börja med:</p>
+          <p>{{ $t('home.random_names.intro') }}</p>
           <Loader v-if="isSearching" />
 
           <div v-if="!isSearching">
@@ -57,9 +67,8 @@
             <b-button
               type="is-light"
               @click="loadNames()"
-            >
-              Ge mig några till...
-            </b-button>
+              v-html="$t('home.random_names.load_more')"
+            />
           </div>
         </div>
       </div>

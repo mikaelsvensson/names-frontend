@@ -4,7 +4,7 @@
       <b-field>
         <b-input
           v-model="filters.name"
-          placeholder="Sök efter namn..."
+          :placeholder="$t('explore.input_field_name.placeholder')"
           size="is-medium"
         />
       </b-field>
@@ -16,7 +16,7 @@
           v-model="filters.gender"
           :native-value="item.key"
         >
-          {{ item.label }}
+          {{ $t('explore.gender_filters_labels.' + item.key) }}
         </b-radio-button>
       </b-field>
 
@@ -27,7 +27,7 @@
           v-model="filters.popularity"
           :native-value="item.key"
         >
-          {{ item.label }}
+          {{ $t('explore.popularity_filters_labels.' + item.key) }}
         </b-radio-button>
       </b-field>
 
@@ -38,7 +38,7 @@
           v-model="filters.length"
           :native-value="item.key"
         >
-          {{ item.label }}
+          {{ $t('explore.length_filters_labels.' + item.key) }}
         </b-radio-button>
       </b-field>
 
@@ -48,7 +48,7 @@
       >
         <Notification type="INFO">
           <div>
-            Använd sökfältet och knapparna ovan att hitta namn.
+            {{ $t('explore.no_filters_note') }}
           </div>
         </Notification>
       </article>
@@ -64,12 +64,19 @@
           class="content"
         >
           <p>
-            Det var ett ovanligt namn.
+            {{ $t('explore.no_results.paragraph_1') }}
           </p>
-          <p>
-            <a @click.prevent="addName">Spara {{ filters.name }} som ett namn du gillar</a>. Bara du och din
-            partner kommer se detta namn.
-          </p>
+          <i18n
+            path="explore.no_results.paragraph_2.sentence"
+            tag="p"
+          >
+            <template #save_name_link>
+              <a
+                @click.prevent="addName"
+                v-html="$t('explore.no_results.paragraph_2.save_name_link', { name: filters.name })"
+              />
+            </template>
+          </i18n>
         </div>
 
         <ListItem
@@ -86,9 +93,8 @@
           <b-button
             type="is-light"
             @click="loadMore()"
-          >
-            Visa fler...
-          </b-button>
+            v-html="$t('explore.load_more')"
+          />
         </div>
       </div>
     </section>
@@ -110,57 +116,45 @@ let searchResultId = 0
 
 const GENDER_FILTERS = {
   all: {
-    label: 'Alla',
     queryParam: ''
   },
   girls: {
-    label: 'Flicka',
     queryParam: `attribute-filter=SCB_PERCENT_WOMEN:GREATER_THAN:${1 - UNISEX_THRESHOLD}`
   },
   boys: {
-    label: 'Pojke',
     queryParam: `attribute-filter=SCB_PERCENT_WOMEN:LESS_THAN:${UNISEX_THRESHOLD}`
   },
   unisex: {
-    label: 'Unisex',
     queryParam: `attribute-filter=SCB_PERCENT_WOMEN:GREATER_THAN:${UNISEX_THRESHOLD}&attribute-filter=SCB_PERCENT_WOMEN:LESS_THAN:${1 - UNISEX_THRESHOLD}`
   }
 }
 
 const POPULARITY_FILTERS = {
   all: {
-    label: 'Alla',
     queryParam: ''
   },
   common: {
-    label: 'Vanligt',
     queryParam: `attribute-filter=SCB_PERCENT_OF_POPULATION:GREATER_THAN:${1.0 / 1000}`
   },
   between: {
-    label: 'Varken eller',
     queryParam: `attribute-filter=SCB_PERCENT_OF_POPULATION:GREATER_THAN:${1.0 / 100000}&attribute-filter=SCB_PERCENT_OF_POPULATION:LESS_THAN:${1.0 / 1000}`
   },
   uncommon: {
-    label: 'Ovanligt',
     queryParam: `attribute-filter=SCB_PERCENT_OF_POPULATION:LESS_THAN:${1.0 / 100000}`
   }
 }
 
 const LENGTH_FILTERS = {
   all: {
-    label: 'Alla',
     queryParam: ''
   },
   short: {
-    label: 'Korta',
     queryParam: `attribute-filter=SYLLABLE_COUNT:LESS_THAN:${2}`
   },
   medium: {
-    label: 'Medel',
     queryParam: `attribute-filter=SYLLABLE_COUNT:GREATER_THAN:${1.9}&attribute-filter=SYLLABLE_COUNT:LESS_THAN:${4}`
   },
   long: {
-    label: 'Långa',
     queryParam: `attribute-filter=SYLLABLE_COUNT:GREATER_THAN:${3.9}`
   }
 }
@@ -196,9 +190,9 @@ export default {
       searchResult: [],
       searchOffset: 0,
       isLast: false,
-      genderOptions: Object.entries(GENDER_FILTERS).map(([key, {label}]) => ({key, label})),
-      popularityOptions: Object.entries(POPULARITY_FILTERS).map(([key, {label}]) => ({key, label})),
-      lengthOptions: Object.entries(LENGTH_FILTERS).map(([key, {label}]) => ({key, label})),
+      genderOptions: Object.keys(GENDER_FILTERS).map(key => ({key})),
+      popularityOptions: Object.keys(POPULARITY_FILTERS).map(key => ({key})),
+      lengthOptions: Object.keys(LENGTH_FILTERS).map(key => ({key})),
       filters: initialFilters
         .reduce((filters, current) => ({
           ...filters,
