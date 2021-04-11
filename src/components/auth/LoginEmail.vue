@@ -77,7 +77,7 @@
       <b-field>
         <b-input
           v-model="emailAddress"
-          placeholder="E-postadress"
+          :placeholder="$t('login_email.input_field.placeholder')"
           expanded
         />
         <p class="control">

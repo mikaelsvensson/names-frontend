@@ -85,6 +85,9 @@
       "sentence": "You'll get a {strong_1} when you want to log in. Click the link to log in. {strong_2}",
       "strong_1": "link via mail",
       "strong_2": "No password necessary."
+    },
+    "input_field": {
+      "placeholder": "Email address"
     }
   },
   "explore": {

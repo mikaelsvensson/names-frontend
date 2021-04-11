@@ -85,6 +85,9 @@
       "sentence": "Du får en {strong_1} när du vill logga in. Klicka på länken för att logga in. {strong_2}",
       "strong_1": "länk via e-post",
       "strong_2": "Lösenord behövs inte."
+    },
+    "input_field": {
+      "placeholder": "E-postadress"
     }
   },
   "explore": {
