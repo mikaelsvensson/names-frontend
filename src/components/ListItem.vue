@@ -228,7 +228,7 @@ export default {
       }
 
       div.vote-partner {
-        flex-basis: 4em;
+        flex-basis: 3em;
         display: flex;
         justify-content: center;
       }
