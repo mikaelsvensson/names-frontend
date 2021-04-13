@@ -1,9 +1,9 @@
 {
   "navbar": {
     "home": "Hem",
-    "explore":"Sök",
+    "explore": "Sök",
     "recommendations": "Förslag",
-    "share":"Dela",
+    "share": "Dela",
     "favourites": "Favoriter"
   },
   "home": {
@@ -211,5 +211,33 @@
       "instructions": "Din partner skannar QR-koden med sin mobilkamera och går till adressen som då dyker upp.",
       "note": "QR-läsare finns i många mobilkameror, men inte alla."
     }
+  },
+  "profile": {
+    "title": "Min profil",
+    "identity_provider": {
+      "body": "Du har loggat in via {provider}.",
+      "facebook": "Facebook",
+      "email": "e-post"
+    },
+    "partner_connected": "Röster och namn delas med en annan användare.",
+    "partner_not_connected": "Dina röster delas inte med någon.",
+    "delete_account": {
+      "heading": "Ta bort profil",
+      "instructions": "Genom att ta bort din profil så raderas all din data från tjänsten, exempelvis vilka namn du röstat på.",
+      "button": "Ta bort...",
+      "confirmation": {
+        "title": "Är du säker?",
+        "confirmation": "Detta kan inte ångras. Du kommer inte kunna återställa dina data efter att du tagit bort din profil.",
+        "button_confirm": "Ta bort profil",
+        "button_cancel": "Avbryt"
+      }
+    },
+    "log_out": {
+      "button": "Logga ut"
+    }
+  },
+  "profile_deleted": {
+    "title": "Profil raderad",
+    "body": "Vi har nu tagit bort all data om dig från systemet. Välkommen åter."
   }
 }

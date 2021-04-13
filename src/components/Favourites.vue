@@ -146,7 +146,7 @@ export default {
   ],
   methods: {
     search: async function () {
-      this.$router.replace({
+      await this.$router.replace({
         name: 'favourites',
         params: {
           filters: Object.entries(this.filters)

@@ -27,6 +27,8 @@ import Name from "@/components/Name";
 import AboutPrivacyPolicy from "@/components/AboutPrivacyPolicy";
 import About from "@/components/About";
 import Recommendations from "@/components/Recommendations";
+import Profile from "@/components/Profile";
+import ProfileDeleted from "@/components/ProfileDeleted";
 
 //
 // Buefy
@@ -63,6 +65,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 //
 const routes = [
     {
+        name: 'home',
         path: '*',
         component: Home
     },
@@ -97,6 +100,15 @@ const routes = [
     {
         path: '/about/privacy',
         component: AboutPrivacyPolicy
+    },
+    {
+        path: '/profile',
+        component: Profile
+    },
+    {
+        name: 'profile_deleted',
+        path: '/profile/deleted',
+        component: ProfileDeleted
     },
     {
         path: '/:actionId',

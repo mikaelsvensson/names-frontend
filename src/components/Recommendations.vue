@@ -124,7 +124,7 @@ export default {
       this.searchResult.find(n => n.id === nameId).isVoteCast = true
     },
     search: async function () {
-      this.$router.replace({
+      await this.$router.replace({
         name: 'recommendations',
         params: {
           filters: Object.entries(this.filters)

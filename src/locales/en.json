@@ -211,5 +211,33 @@
       "instructions": "Your partner scans this QR code with their phone camera and visits the link that pops up.",
       "note": "QR reader is build-in to most, but not all, phone cameras."
     }
+  },
+  "profile": {
+    "title": "My profile",
+    "identity_provider": {
+      "body": "You've logged in using {provider}.",
+      "facebook": "Facebook",
+      "email": "email"
+    },
+    "partner_connected": "Your votes and names are shared with another user.",
+    "partner_not_connected": "Your votes and names are not shared with anyone else.",
+    "delete_account": {
+      "heading": "Delete profile",
+      "instructions": "By deleting your profile you will lose all data on this site, for example your votes.",
+      "button": "Delete...",
+      "confirmation": {
+        "title": "Are you sure?",
+        "confirmation": "This is an irreversible operation. You will not be able to recover your data after you delete your profile.",
+        "button_confirm": "Delete profile",
+        "button_cancel": "Cancel"
+      }
+    },
+    "log_out": {
+      "button": "Log out"
+    }
+  },
+  "profile_deleted": {
+    "title": "Profile deleted",
+    "body": "We've deleted all your data from the system. Welcome back."
   }
 }

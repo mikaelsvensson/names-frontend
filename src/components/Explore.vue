@@ -206,7 +206,7 @@ export default {
   ],
   methods: {
     search: async function () {
-      this.$router.replace({
+      await this.$router.replace({
         name: 'explore',
         params: {
           filters: Object.entries(this.filters)
