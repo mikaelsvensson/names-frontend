@@ -187,7 +187,12 @@
     "info_login_required": "Börja med att logga in.",
     "error_already_used": "Denna engångs-länk har redan använts en gång.",
     "error_unknown_status": "Oj, något gick fel.",
-    "error_no_action": "Oj, vi klantade oss och något gick fel."
+    "error_no_action": "Oj, vi klantade oss och något gick fel.",
+    "delete_data_request_status": {
+      "body": "Du vill att vi ska ta bort data om dig som vi fått via Facebook. Detta inkluderar ditt användarnamn, och om vi tar bort det så kan du inte logga in. Eftersom du då inte längre kommer kunna logga in till den här tjänsten så kommer även alla dina namn och röster att raderas. Är detta vad du vill?",
+      "button": "Ja, ta bort min profil och data på Namn",
+      "success": "Vi har nu tagit bort all data om dig från systemet. Välkommen åter."
+    }
   },
   "recommendations": {
     "title": "Förslag utifrån dina röster",

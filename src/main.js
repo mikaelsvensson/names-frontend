@@ -111,6 +111,7 @@ const routes = [
         component: ProfileDeleted
     },
     {
+        name: 'perform_action',
         path: '/:actionId',
         component: PerformAction
     }

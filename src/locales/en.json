@@ -187,7 +187,12 @@
     "info_login_required": "Start by logging in.",
     "error_already_used": "This one-time link has already been used once.",
     "error_unknown_status": "Oops, something went wrong.",
-    "error_no_action": "Our bad. We made a mistake and something went wrong."
+    "error_no_action": "Our bad. We made a mistake and something went wrong.",
+    "delete_data_request_status": {
+      "body": "You have requested that we delete the data we have received abouut you from Facebook. This includes your username, and you will not be able to log in if we delete that. Since you will not be able to log in after that we will also delete the your votes and names. Please confirm that you are aware of this.",
+      "button": "Yes, delete my profile on Names",
+      "success": "We've deleted all your data from the system. Welcome back."
+    }
   },
   "recommendations": {
     "title": "Suggestions based on your votes",

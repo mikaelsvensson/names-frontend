@@ -20,6 +20,15 @@
               <Login :show-logout="false" />
             </div>
           </div>
+          <div v-if="button.action">
+            <div class="mt-2">
+              <b-button
+                @click="button.action"
+              >
+                {{ button.label }}
+              </b-button>
+            </div>
+          </div>
         </Notification>
       </div>
     </section>
@@ -45,6 +54,10 @@ export default {
         type: null,
         message: null
       },
+      button: {
+        action: null,
+        label: null
+      },
       isLoginRequired: false
     };
   },
@@ -53,12 +66,14 @@ export default {
   ],
   methods: {
     setMessage(type, message) {
-      this.notification = { type, message }
+      this.notification = {type, message}
     },
-    async performAction () {
-      const actionId = this.$route.params.actionId;
+    setButton(label, action) {
+      this.button = {label, action}
+    },
+    async performAction(actionId) {
       if (actionId) {
-        this.isLoading = true
+        this.isLoading = true;
         try {
           const token = this.token.value;
           const actionResp = await fetch(`${process.env.VUE_APP_BASE_URL}/actions/${actionId}/invocation`, {
@@ -68,29 +83,52 @@ export default {
               'Content-Type': 'application/json',
               ...(token ? {'Authorization': 'Bearer ' + token} : {})
             }
-          })
-          this.isError = !actionResp.ok
+          });
+          this.isError = !actionResp.ok;
           if (!this.isError) {
-            const updatedAction = await actionResp.json()
+            const updatedAction = await actionResp.json();
             if (updatedAction.type === 'ADD_RELATIONSHIP') {
-              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_add_relationship'))
+              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_add_relationship'));
+              this.setButton(null, null)
             } else if (updatedAction.type === 'VERIFY_EMAIL') {
-              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_verify_email'))
-              this.isRetried = true
-              await this.requestToken('EMAIL', updatedAction.token)
+              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_verify_email'));
+              this.setButton(null, null);
+              this.isRetried = true;
+              await this.requestToken('EMAIL', updatedAction.token);
 
               if (updatedAction.redirectTo) {
                 await this.$router.push(updatedAction.redirectTo)
               }
+            } else if (updatedAction.type === 'DELETE_DATA_REQUEST_STATUS') {
+              this.setMessage(Types.INFO, this.$t('perform_action.delete_data_request_status.body'));
+              this.setButton(this.$t('perform_action.delete_data_request_status.button'), async () => {
+                await this.$router.replace({
+                  name: 'perform_action',
+                  params: {
+                    actionId: updatedAction.parameters.confirmActionId
+                  }
+                })
+              });
+              this.isRetried = true;
+              await this.requestToken('EMAIL', updatedAction.token);
+
+              if (updatedAction.redirectTo) {
+                await this.$router.push(updatedAction.redirectTo)
+              }
+            } else if (updatedAction.type === 'DELETE_DATA_CONFIRMATION') {
+              this.setMessage(Types.SUCCESS, this.$t('perform_action.delete_data_request_status.success'));
+              this.setButton(null, null);
+              this.logOut()
             } else {
-              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_generic'))
+              this.setMessage(Types.SUCCESS, this.$t('perform_action.success_generic'));
+              this.setButton(null, null)
             }
           } else {
             if (actionResp.status === 404) {
               this.setMessage(Types.INFO, this.$t('perform_action.info_link_expired'))
             } else if (actionResp.status === 401) {
-              this.setMessage(Types.INFO, this.$t('perform_action.info_login_required'))
-              this.isError = false
+              this.setMessage(Types.INFO, this.$t('perform_action.info_login_required'));
+              this.isError = false;
               this.isLoginRequired = true
             } else if (actionResp.status === 410) {
               this.setMessage(Types.ERROR, this.$t('perform_action.error_already_used'))
@@ -106,6 +144,9 @@ export default {
         this.setMessage(Types.ERROR, this.$t('perform_action.error_no_action'))
       }
     },
+    logOut: function () {
+      this.token.value = null
+    },
     isLoggedIn: function () {
       return !!this.token.value
     }
@@ -114,7 +155,7 @@ export default {
   },
   async created() {
     try {
-      await this.performAction()
+      await this.performAction(this.$route.params.actionId)
     } catch (e) {
       console.log('💥', e)
     }
@@ -129,6 +170,13 @@ export default {
           console.log('💥', e)
         }
         this.isRetried = true
+      }
+    },
+    async $route(to) {
+      try {
+        await this.performAction(to.params.actionId)
+      } catch (e) {
+        console.log('💥', e)
       }
     }
   }
