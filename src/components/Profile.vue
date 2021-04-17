@@ -145,8 +145,6 @@ export default {
       this.isDeleting = true;
       if (this.isConfirmDeleteChecked) {
         try {
-
-
           const deleteResp = await fetch(`${process.env.VUE_APP_BASE_URL}/profile`, {
             method: 'DELETE',
             mode: 'cors',
@@ -171,6 +169,14 @@ export default {
   },
   async created() {
     await this.loadProfile()
+  },
+  watch: {
+    'token.value': async function (newValue) {
+      const isLoggedIn = !!newValue
+      if (isLoggedIn) {
+        await this.loadProfile()
+      }
+    }
   }
 }
 </script>
