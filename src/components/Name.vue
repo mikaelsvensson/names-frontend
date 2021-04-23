@@ -83,7 +83,7 @@
         <div class="level-item has-text-centered">
           <div>
             <p class="heading">
-              {{ $t('name.gender.men')}}
+              {{ $t('name.stats_for.gender.men') }}
             </p>
             <p class="subtitle">
               {{ item.labelMen }}
@@ -93,7 +93,7 @@
         <div class="level-item has-text-centered">
           <div>
             <p class="heading">
-              {{ $t('name.gender.women')}}
+              {{ $t('name.stats_for.gender.women') }}
             </p>
             <p class="subtitle">
               {{ item.labelWomen }}
