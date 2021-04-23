@@ -1,3 +1,11 @@
+export const VOTE_STRENGTH = {
+    VERY_POSITIVE: 100,
+    POSITIVE: 50,
+    NEUTRAL: 0,
+    NEGATIVE: -50,
+    VERY_NEGATIVE: -100
+};
+
 export default {
     methods: {
         vote: async function (nameId, value, authToken) {
@@ -10,7 +18,7 @@ export default {
                         ...(authToken ? {'Authorization': 'Bearer ' + authToken} : {})
                     },
                     body: JSON.stringify({value})
-                })
+                });
                 if (voteResponse.ok) {
                     return true
                 } else {

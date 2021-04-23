@@ -103,7 +103,7 @@
 
 <script>
 import ComponentMixins from "@/util/ComponentMixins";
-import VotesMixins from "@/util/VotesMixins";
+import VotesMixins, {VOTE_STRENGTH} from "@/util/VotesMixins";
 import ListItem from "@/components/ListItem";
 import Notification from "@/components/Notification";
 import Loader from "@/components/Loader";
@@ -274,7 +274,7 @@ export default {
         })
         if (createNameResp.ok) {
           const newName = await createNameResp.json()
-          await this.vote(newName.id, 100, this.token.value)
+          await this.vote(newName.id, VOTE_STRENGTH.VERY_POSITIVE, this.token.value)
           this.searchResult.push(newName)
         } else {
           console.log('💥 Failed to create name')
