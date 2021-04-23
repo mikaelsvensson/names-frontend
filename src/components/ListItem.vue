@@ -10,21 +10,23 @@
           {{ name }}
         </router-link>
 
-        <span
-          v-if="getGender() === 'MALE'"
-          :title="$t('list_item.gender_description.male')"
-          class="icon-male"
-        >♂</span>
-        <span
-          v-if="getGender() === 'FEMALE'"
-          :title="$t('list_item.gender_description.female')"
-          class="icon-female"
-        >♀</span>
-        <span
-          v-if="getGender() === 'UNISEX'"
-          :title="$t('list_item.gender_description.unisex')"
-          class="icon-unisex"
-        >⚤</span>
+        <!--
+                        <span
+                          v-if="getGender() === 'MALE'"
+                          :title="$t('list_item.gender_description.male')"
+                          class="icon-male"
+                        >♂</span>
+                        <span
+                          v-if="getGender() === 'FEMALE'"
+                          :title="$t('list_item.gender_description.female')"
+                          class="icon-female"
+                        >♀</span>
+                        <span
+                          v-if="getGender() === 'UNISEX'"
+                          :title="$t('list_item.gender_description.unisex')"
+                          class="icon-unisex"
+                        >⚤</span>
+                -->
       </div>
       <div class="votes">
         <div class="vote-you">

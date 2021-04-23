@@ -45,6 +45,7 @@
           </p>
         </div>
 
+        <!--
         <div
           v-if="searchResult.length > 0"
           class="search-result-item"
@@ -57,6 +58,7 @@
             {{ $t('favourites.vote_header.partner') }}
           </div>
         </div>
+        -->
 
         <ListItem
           v-for="item in searchResult"
@@ -64,7 +66,7 @@
 
           :name="item.name"
           :id="item.id"
-          is-partner-vote-shown
+          :is-partner-vote-shown="false"
           :partner-vote-value="(item.votes || {}).partnerVoteValue"
           :user-vote-value="(item.votes || {}).selfVoteValue"
           :percent-women="item.demographics.se.percentWomen"
