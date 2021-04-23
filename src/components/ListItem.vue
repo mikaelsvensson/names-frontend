@@ -26,71 +26,48 @@
           class="icon-unisex"
         >⚤</span>
       </div>
-      <div class="vote-you">
-        <div class="vote-buttons">
-          <div class="buttons">
-            <b-button
-              type="is-light"
-              @click="castVote(100)"
-            >
-              <span class="icon is-small">
-                <font-awesome-icon
-                  :style="{ color: 'green' }"
-                  :icon="[currentUserVoteValue === 100 ? 'fa' : 'far', 'smile']"
-                />
-              </span>
-            </b-button>
-            <b-button
-              type="is-light"
-              @click="castVote(0)"
-            >
-              <span class="icon is-small">
-                <font-awesome-icon
-                  :style="{ color: 'orange' }"
-                  :icon="[currentUserVoteValue === 0 ? 'fa' : 'far', 'meh']"
-                />
-              </span>
-            </b-button>
-            <b-button
-              type="is-light"
-              @click="castVote(-100)"
-            >
-              <span class="icon is-small">
-                <font-awesome-icon
-                  :style="{ color: 'red' }"
-                  :icon="[currentUserVoteValue === -100 ? 'fa' : 'far', 'frown']"
-                />
-              </span>
-            </b-button>
+      <div class="votes">
+        <div class="vote-you">
+          <div class="vote-buttons">
+            <VoteRegular
+              v-if="voteComponent !== 'emoji'"
+              :value="currentUserVoteValue"
+              @vote="castVote"
+            />
+            <VoteEmoji
+              v-if="voteComponent === 'emoji'"
+              :value="currentUserVoteValue"
+              @vote="castVote"
+            />
           </div>
         </div>
-      </div>
-      <div
-        v-if="isPartnerVoteShown"
-        class="vote-partner"
-      >
-        <span class="icon is-small">
-          <font-awesome-icon
-            v-if="partnerVoteValue === 100"
-            :style="{ color: 'green' }"
-            :icon="[ 'far', 'smile']"
-          />
-          <font-awesome-icon
-            v-if="partnerVoteValue === 0"
-            :style="{ color: 'orange' }"
-            :icon="[ 'far', 'meh']"
-          />
-          <font-awesome-icon
-            v-if="partnerVoteValue === -100"
-            :style="{ color: 'red' }"
-            :icon="[ 'far', 'frown']"
-          />
-          <font-awesome-icon
-            v-if="partnerVoteValue === null"
-            :style="{ color: '#ccc' }"
-            :icon="[ 'fa', 'question']"
-          />
-        </span>
+        <div
+          v-if="isPartnerVoteShown"
+          class="vote-partner"
+        >
+          <span class="icon is-small">
+            <font-awesome-icon
+              v-if="partnerVoteValue === 100"
+              :style="{ color: 'green' }"
+              :icon="[ 'far', 'smile']"
+            />
+            <font-awesome-icon
+              v-if="partnerVoteValue === 0"
+              :style="{ color: 'orange' }"
+              :icon="[ 'far', 'meh']"
+            />
+            <font-awesome-icon
+              v-if="partnerVoteValue === -100"
+              :style="{ color: 'red' }"
+              :icon="[ 'far', 'frown']"
+            />
+            <font-awesome-icon
+              v-if="partnerVoteValue === null"
+              :style="{ color: '#ccc' }"
+              :icon="[ 'fa', 'question']"
+            />
+          </span>
+        </div>
       </div>
     </div>
     <div v-if="showLoginForm">
@@ -106,6 +83,8 @@
 import ComponentMixins from "@/util/ComponentMixins";
 import VotesMixins from "@/util/VotesMixins";
 import Login from "@/components/auth/Login";
+import VoteRegular from "@/components/VoteRegular";
+import VoteEmoji from "@/components/VoteEmoji";
 
 const UNISEX_THRESHOLD = 0.1
 
@@ -119,7 +98,7 @@ export default {
       pendingVoteValue: null
     }
   },
-  components: {Login},
+  components: {VoteEmoji, VoteRegular, Login},
   mixins: [
     ComponentMixins,
     VotesMixins
@@ -153,6 +132,9 @@ export default {
   computed: {
     currentUserVoteValue: function () {
       return this.updatedUserVoteValue !== null ? this.updatedUserVoteValue : this.userVoteValue
+    },
+    voteComponent: function () {
+      return 'emoji';
     }
   },
   methods: {
@@ -204,34 +186,35 @@ export default {
         display: flex;
         padding: 0.5em 0;
         align-items: center;
-
-        div {
-            flex: 0;
-        }
+        justify-content: stretch;
+        flex-wrap: wrap;
+        align-content: flex-end;
+        justify-items: right;
+        flex-direction: row;
 
         div.name {
             flex: 1;
+            white-space: nowrap;
+            flex-basis: 9em;
         }
 
         div.popularity {
-          flex-basis: 3.5em;
+            flex-basis: 3.5em;
             text-align: right;
         }
 
-      div.vote-you {
-
-        flex-basis: 9em;
-
-        div.buttons {
-          flex-wrap: unset;
+        div.votes {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 1;
         }
-      }
 
-      div.vote-partner {
-        flex-basis: 3em;
-        display: flex;
-        justify-content: center;
-      }
+        div.vote-partner {
+            display: flex;
+            justify-content: center;
+            width: 40px;
+        }
     }
 
     .icon-male {
