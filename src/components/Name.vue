@@ -17,46 +17,13 @@
         {{ $t('name.your_vote.title') }}
       </h2>
       <div class="vote-buttons">
-        <div class="buttons is-centered">
-          <button
-            class="button is-large is-light"
-            @click="castVote(100)"
-          >
-            <span class="icon">
-              <font-awesome-icon
-                size="lg"
-                :style="{ color: 'green' }"
-                :icon="[currentUserVoteValue === 100 ? 'fa' : 'far', 'smile']"
-              />
-            </span>
-          </button>
-
-          <button
-            class="button is-large is-light"
-            @click="castVote(0)"
-          >
-            <span class="icon">
-              <font-awesome-icon
-                size="lg"
-                :style="{ color: 'orange' }"
-                :icon="[currentUserVoteValue === 0 ? 'fa' : 'far', 'meh']"
-              />
-            </span>
-          </button>
-
-          <button
-            class="button is-large is-light"
-            @click="castVote(-100)"
-          >
-            <span class="icon">
-              <font-awesome-icon
-                size="lg"
-                :style="{ color: 'red' }"
-                :icon="[currentUserVoteValue === -100 ? 'fa' : 'far', 'frown']"
-              />
-            </span>
-          </button>
-        </div>
+        <VoteEmoji
+          v-if="voteComponent === 'emoji'"
+          :value="currentUserVoteValue"
+          @vote="castVote"
+          large
+          centered
+        />
       </div>
       <div
         v-if="showLoginForm"
@@ -132,6 +99,7 @@ import ListItem from "@/components/ListItem";
 import VotesMixins from "@/util/VotesMixins";
 import Loader from "@/components/Loader";
 import Login from "@/components/auth/Login";
+import VoteEmoji from "@/components/VoteEmoji";
 
 const numberFormat = new Intl.NumberFormat();
 
@@ -165,7 +133,8 @@ export default {
   components: {
     Loader,
     ListItem,
-    Login
+    Login,
+    VoteEmoji
   },
   data: function () {
     return {
@@ -183,6 +152,9 @@ export default {
   computed: {
     currentUserVoteValue: function () {
       return this.updatedUserVoteValue !== null ? this.updatedUserVoteValue : this.name?.votes?.selfVoteValue
+    },
+    voteComponent: function () {
+      return 'emoji';
     },
     demographics: function () {
       var data = this.name?.demographics ?? {};

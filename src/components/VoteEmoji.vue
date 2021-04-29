@@ -1,7 +1,7 @@
 <template>
-  <div class="buttons has-addons">
+  <div :class="wrapperCssClasses()">
     <div
-      :class="'button ' + (item.isSelected ? 'has-background-grey-light' : 'is-light')"
+      :class="buttonCssClasses(item.isSelected)"
       v-for="item in voteOptions"
       :key="item.value"
       @click="onClick(item.value)"
@@ -27,6 +27,14 @@ export default {
     value: {
       default: undefined,
       type: Number
+    },
+    large: {
+      default: false,
+      type: Boolean
+    },
+    centered: {
+      default: false,
+      type: Boolean
     }
   },
   computed: {
@@ -57,6 +65,21 @@ export default {
   methods: {
     onClick: async function (voteValue) {
       this.$emit('vote', voteValue)
+    },
+    buttonCssClasses: function(isSelected) {
+      return [
+        'button',
+        isSelected ? 'has-background-grey-light' : 'is-light',
+        this.large ? 'large' : ''
+      ].join(' ')
+    },
+    wrapperCssClasses: function() {
+      return [
+        'buttons',
+        'has-addons',
+        this.centered ? 'is-centered' : '',
+        this.large ? 'large' : ''
+      ].join(' ')
     }
   }
 }
@@ -75,5 +98,17 @@ export default {
     div.emoji {
       font-size: 30px;
       margin-top: 4px;
+    }
+
+    div.large {
+        div.button {
+            width: 60px;
+            height: 60px;
+        }
+
+        div.emoji {
+          font-size: 40px;
+          margin-top: 5px;
+        }
     }
 </style>
