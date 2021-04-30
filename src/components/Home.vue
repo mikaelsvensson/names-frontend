@@ -12,6 +12,58 @@
 
       <div class="box">
         <div class="content">
+          <p>{{ $t('home.search_preset.intro') }}</p>
+          <ul>
+            <li
+              v-for="item in presetSearches"
+              :key="item.key"
+            >
+              <router-link :to="item.path">
+                {{ $t('home.search_preset.' + item.key, item.filters) }}
+              </router-link>
+            </li>
+          </ul>
+          <i18n
+            path="home.search_preset.explore_link.sentence"
+            tag="p"
+          >
+            <template #link>
+              <router-link
+                to="/explore"
+                v-html="$t('home.search_preset.explore_link.link')"
+              />
+            </template>
+          </i18n>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="content">
+          <p>{{ $t('home.random_names.intro') }}</p>
+          <Loader v-if="isSearching" />
+
+          <div v-if="!isSearching">
+            <ListItem
+              v-for="item in randomNames"
+              :key="item.id"
+
+              :name="item.name"
+              :id="item.id"
+              :user-vote-value="(item.votes || {}).selfVoteValue"
+              :percent-women="item.demographics.se.percentWomen"
+            />
+
+            <b-button
+              type="is-light"
+              @click="loadNames()"
+              v-html="$t('home.random_names.load_more')"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="content">
           <p>{{ $t('home.getting_started.intro') }}</p>
           <ol>
             <li>
@@ -47,31 +99,6 @@
           </ol>
         </div>
       </div>
-
-      <div class="box">
-        <div class="content">
-          <p>{{ $t('home.random_names.intro') }}</p>
-          <Loader v-if="isSearching" />
-
-          <div v-if="!isSearching">
-            <ListItem
-              v-for="item in randomNames"
-              :key="item.id"
-
-              :name="item.name"
-              :id="item.id"
-              :user-vote-value="(item.votes || {}).selfVoteValue"
-              :percent-women="item.demographics.se.percentWomen"
-            />
-
-            <b-button
-              type="is-light"
-              @click="loadNames()"
-              v-html="$t('home.random_names.load_more')"
-            />
-          </div>
-        </div>
-      </div>
     </section>
   </div>
 </template>
@@ -85,6 +112,25 @@ let batchOffset = 0;
 const BATCH_SIZE = 5;
 const RANDOM_SEED = Math.round(Math.random() * 100000);
 const CACHE_FACTOR = 20;
+const ALPHABET = 'abcdefghijklmnopqrstuvwxyzåäö'
+const searchPresets = {
+  popularGirlNames: {
+    gender: 'girls',
+    popularity: 'common',
+    length: 'all'
+  },
+  popularBoyNames: {
+    gender: 'boys',
+    popularity: 'common',
+    length: 'all'
+  },
+  unusualNames: {
+    name: ALPHABET.charAt(Math.floor(ALPHABET.length * Math.random())),
+    gender: 'all',
+    popularity: 'between',
+    length: 'all'
+  }
+};
 
 export default {
   name: 'Home',
@@ -132,8 +178,22 @@ export default {
           console.log('💬 Ignore result')
         }
       }
-      this.randomNames = this.searchResult.splice(0, Math.min(this.searchResult.length, BATCH_SIZE))
+      this.randomNames = this.searchResult.splice(0, Math.min(this.searchResult.length, BATCH_SIZE));
       this.isSearching = false;
+    }
+  },
+  computed: {
+    presetSearches: function () {
+      return Object
+        .entries(searchPresets)
+        .map(([key, filters]) => ({
+          key,
+          filters,
+          path: '/explore/' + Object
+            .entries(filters)
+            .map(([key, value]) => key + '-' + value)
+            .join('/')
+        }));
     }
   },
   mounted() {

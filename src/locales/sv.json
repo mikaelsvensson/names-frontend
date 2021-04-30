@@ -10,7 +10,7 @@
     "title": "Vad ska barnet heta?",
     "subtitle": "Upptäck vilka namn ni båda gillar.",
     "getting_started": {
-      "intro": "Det är enkelt att komma igång:",
+      "intro": "Så här hittar ni ett namn tillsammans:",
       "step_1": {
         "sentence": "Hitta några egna favoriter på {link}.",
         "link": "söksidan"
@@ -25,8 +25,18 @@
       }
     },
     "random_names": {
-      "intro": "Ett par namn att börja med:",
+      "intro": "Vad tycker du om de här namnen?",
       "load_more": "Ge mig några till..."
+    },
+    "search_preset": {
+      "popularGirlNames":  "Vanliga namn på flickor och kvinnor",
+      "popularBoyNames": "Vanliga namn på pojkar och män",
+      "unusualNames": "Lite ovanliga namn som börjar på {name}",
+      "intro": "Vad sägs om att börja med någon av de här listorna?",
+      "explore_link": {
+        "sentence": "...eller gör någon annan sökning på {link}.",
+        "link": "söksidan"
+      }
     }
   },
   "about": {

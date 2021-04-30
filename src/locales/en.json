@@ -10,7 +10,7 @@
     "title": "What to call the baby?",
     "subtitle": "Discover names you both fancy.",
     "getting_started": {
-      "intro": "Get started right away:",
+      "intro": "How it works:",
       "step_1": {
         "sentence": "Find good names by {link}.",
         "link": "exploring"
@@ -25,8 +25,18 @@
       }
     },
     "random_names": {
-      "intro": "A few names to get started:",
+      "intro": "How do you feel about these names?",
       "load_more": "Give me some more..."
+    },
+    "search_preset": {
+      "popularGirlNames":  "Popular names for girls and women",
+      "popularBoyNames": "Popular names for boys and men",
+      "unusualNames": "A bit unusual names starting with {name}",
+      "intro": "How about starting with one of these lists?",
+      "explore_link": {
+        "sentence": "...or search for something else on the {link}.",
+        "link": "search page"
+      }
     }
   },
   "about": {
