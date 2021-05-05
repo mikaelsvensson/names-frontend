@@ -102,10 +102,14 @@
 
 <script>
 import Login from "@/components/auth/Login";
+import AnonymousAuthenticatorMixins from "@/util/AnonymousAuthenticatorMixins";
 
 export default {
   name: 'Profile',
   inject: ['token'],
+  mixins: [
+    AnonymousAuthenticatorMixins
+  ],
   components: {Login},
   data: function () {
     return {
@@ -154,6 +158,7 @@ export default {
           });
           if (deleteResp.ok) {
             this.logOut()
+            this.unsetAnonymousAuthenticatorUserId()
             await this.$router.replace({
               name: 'profile_deleted'
             })

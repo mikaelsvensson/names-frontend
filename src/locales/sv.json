@@ -60,7 +60,7 @@
         "paragraph_2": "Några exempel på vad vi inte använder din data till:",
         "example_1": "vi skickar inte din data till andra organisationer,",
         "example_2": "vi lagrar inte lösenord eller andra känsliga uppgifter,",
-        "example_3": "vi använder inte dina dat för att visa reklam,",
+        "example_3": "vi använder inte dina data för att visa reklam,",
         "example_4": "vi skickar inte reklam via e-post,"
       },
       "section_2": {
@@ -75,9 +75,22 @@
   },
   "login": {
     "logout": "Logga ut",
-    "login_required": "Först måste du logga in."
+    "login_required": "Först måste du logga in.",
+    "back": "Välj annan inloggningsmetod",
+    "authenticator": {
+      "facebook":{
+        "button": "Logga in med Facebook"
+      },
+      "email":{
+        "button": "Logga in med e-postadress..."
+      },
+      "anonymous": {
+        "button": "Logga in med tillfälligt anonymt konto..."
+      }
+    }
   },
   "login_email": {
+    "send_link": "Skicka inloggningslänk",
     "sending_link": "Nu skickar vi en länk till dig...",
     "check_inbox": {
       "sentence": "{strong_1} för att hitta mejlet vi skickat. {strong_2} för att logga in.",
@@ -92,12 +105,12 @@
     },
     "login_without_password": "Logga in utan lösenord",
     "instructions": {
-      "sentence": "Du får en {strong_1} när du vill logga in. Klicka på länken för att logga in. {strong_2}",
-      "strong_1": "länk via e-post",
-      "strong_2": "Lösenord behövs inte."
+      "sentence": "Så här fungerar det: Vi skickar dig en länk via e-post. Du klickar på länken för att logga in. Lösenord behövs inte.",
+      "strong_1": "",
+      "strong_2": ""
     },
     "input_field": {
-      "placeholder": "E-postadress"
+      "placeholder": "Din e-postadress"
     }
   },
   "explore": {
@@ -232,6 +245,7 @@
     "identity_provider": {
       "body": "Du har loggat in via {provider}.",
       "facebook": "Facebook",
+      "anonymous": "anonym profil",
       "email": "e-post"
     },
     "partner_connected": "Röster och namn delas med en annan användare.",

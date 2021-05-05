@@ -1,31 +1,51 @@
 <template>
   <div>
     <div
-      v-if="translatedMessage"
-      class="mb-2 message-root"
+      v-if="!selectedAuthenticator"
     >
-      <div class="message-icon">
-        <font-awesome-icon
-          size="2x"
-          :icon="[ 'fa', 'door-open' ]"
-        />
+      <div
+        v-if="translatedMessage"
+        class="mb-2 message-root"
+      >
+        <div class="message-icon">
+          <font-awesome-icon
+            size="2x"
+            :icon="[ 'fa', 'door-open' ]"
+          />
+        </div>
+        <div class="message-content">
+          {{ translatedMessage }}
+        </div>
       </div>
-      <div class="message-content">
-        {{ translatedMessage }}
+      <div class="buttons">
+        <button
+          v-for="conf in components"
+          :key="conf.componentName"
+          class="button is-medium is-fullwidth"
+          @click="selectedAuthenticator = conf"
+        >
+          <span class="icon">
+            <font-awesome-icon
+              :icon="conf.icon"
+            />
+          </span>
+          <span>{{ $t('login.authenticator.' + conf.authenticator.toLowerCase() + '.button') }}</span>
+        </button>
       </div>
     </div>
-    <div v-if="!isLoggedIn()">
+    <div
+      v-if="selectedAuthenticator"
+    >
       <div class="mt-4">
-        <LoginFacebook
-          @authenticator-data="logIn('FACEBOOK', $event)"
+        <component
+          :is="selectedAuthenticator.componentName"
+          @authenticator-data="logIn(selectedAuthenticator.authenticator, $event)"
         />
       </div>
-    </div>
-    <div v-if="!isLoggedIn()">
       <div class="mt-4">
-        <LoginEmail
-          @authenticator-data="logIn('EMAIL', $event)"
-        />
+        <a @click="selectedAuthenticator = null">
+          {{ $t('login.back') }}
+        </a>
       </div>
     </div>
     <div v-if="isLoggedIn() && showLogout">
@@ -42,11 +62,12 @@
 <script>
 import LoginFacebook from "@/components/auth/LoginFacebook";
 import LoginEmail from "@/components/auth/LoginEmail";
+import LoginAnonymous from "@/components/auth/LoginAnonymous";
 
 export default {
   name: "Login",
   inject: ['token', 'requestToken'],
-  components: {LoginEmail, LoginFacebook},
+  components: {LoginAnonymous, LoginEmail, LoginFacebook},
   props: {
     showLogout: {
       default: true,
@@ -58,7 +79,9 @@ export default {
     }
   },
   data: function () {
-    return {}
+    return {
+      selectedAuthenticator: null
+    }
   },
   methods: {
     logIn: async function (authName, authData) {
@@ -75,6 +98,25 @@ export default {
   computed: {
     translatedMessage: function () {
       return this.message || this.$t('login.login_required')
+    },
+    components: function () {
+      return [
+        {
+          componentName: "LoginFacebook",
+          icon: [ 'fab', 'facebook' ],
+          authenticator: 'FACEBOOK'
+        },
+        {
+          componentName: "LoginEmail",
+          icon: [ 'fa', 'envelope' ],
+          authenticator: 'EMAIL'
+        },
+        {
+          componentName: "LoginAnonymous",
+          icon: [ 'fa', 'user-ninja' ],
+          authenticator: 'ANONYMOUS'
+        }
+      ]
     }
   }
 }
@@ -93,5 +135,8 @@ export default {
     .message-content {
         flex: 1;
         padding: 5px 0 0 15px;
+    }
+    .buttons button {
+        justify-content: start;
     }
 </style>

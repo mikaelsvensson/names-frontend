@@ -16,6 +16,7 @@ import '@/assets/main.scss' // import 'buefy/dist/buefy.css'
 import {library} from '@fortawesome/fontawesome-svg-core'
 import * as faSolid from '@fortawesome/free-solid-svg-icons'
 import * as faRegular from '@fortawesome/free-regular-svg-icons'
+import * as fabRegular from '@fortawesome/free-brands-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 import Explore from "@/components/Explore";
@@ -55,6 +56,9 @@ library.add(
     faSolid.faExclamationTriangle,
     faSolid.faThumbsUp,
     faSolid.faComment,
+    faSolid.faEnvelope,
+    faSolid.faUserNinja,
+    fabRegular.faFacebook,
     faSolid.faDoorOpen
 )
 

@@ -75,9 +75,22 @@
   },
   "login": {
     "logout": "Log out",
-    "login_required": "You need to log in"
+    "login_required": "You need to log in",
+    "back": "Välj annan inloggningsmetod",
+    "authenticator": {
+      "facebook":{
+        "button": "Logga in med Facebook"
+      },
+      "email":{
+        "button": "Logga in med e-postadress..."
+      },
+      "anonymous": {
+        "button": "Logga in med tillfälligt anonymt konto..."
+      }
+    }
   },
   "login_email": {
+    "send_link": "Skicka inloggningslänk",
     "sending_link": "We're sending a link to you...",
     "check_inbox": {
       "sentence": "{strong_1} to find the mail we just sent you. {strong_2} to log in.",
@@ -92,12 +105,12 @@
     },
     "login_without_password": "Log in without password",
     "instructions": {
-      "sentence": "You'll get a {strong_1} when you want to log in. Click the link to log in. {strong_2}",
-      "strong_1": "link via mail",
-      "strong_2": "No password necessary."
+      "sentence": "This is how it works: You'll get a link by mail. Click the link to log in. No password required.",
+      "strong_1": "",
+      "strong_2": ""
     },
     "input_field": {
-      "placeholder": "Email address"
+      "placeholder": "Your email address"
     }
   },
   "explore": {
@@ -232,6 +245,7 @@
     "identity_provider": {
       "body": "You've logged in using {provider}.",
       "facebook": "Facebook",
+      "anonymous": "anonymous profile",
       "email": "email"
     },
     "partner_connected": "Your votes and names are shared with another user.",
