@@ -76,7 +76,7 @@
   "login": {
     "logout": "Logga ut",
     "login_required": "Först måste du logga in.",
-    "back": "Välj annan inloggningsmetod",
+    "back": "< Välj annan inloggningsmetod",
     "authenticator": {
       "facebook":{
         "button": "Logga in med Facebook"
@@ -85,7 +85,7 @@
         "button": "Logga in med e-postadress..."
       },
       "anonymous": {
-        "button": "Logga in med tillfälligt anonymt konto..."
+        "button": "Logga in med tillfälligt konto..."
       }
     }
   },
@@ -112,6 +112,15 @@
     "input_field": {
       "placeholder": "Din e-postadress"
     }
+  },
+  "login_anonymous": {
+    "logged_in":"Du är inloggad",
+    "logging_in": "Nu loggas du in...",
+    "limitations_intro":"Ett tillfälligt anonymt konto har samma funktioner som ett vanligt konto men med vissa begränsningar:",
+    "limitation_1":"kontot fungerar bara på denna mobil/dator",
+    "limitation_2":"kontot fungerar inte om du surfar i \"inkognito-läge\"",
+    "limitation_3":"kontot slutar fungera efter 30 dagar av inaktivitet",
+    "button_label":"Logga in anonymt"
   },
   "explore": {
     "input_field_name": {
@@ -171,7 +180,8 @@
       "female": "Över 90 % av personerna med detta namn är kvinnor.",
       "unisex": "Namnet bärs av både kvinnor och män."
     },
-    "login_message": "För att rösta måste du logga in."
+    "login_message": "För att rösta måste du logga in.",
+    "login_cancel": "Avbryt"
   },
   "name": {
     "your_vote": {

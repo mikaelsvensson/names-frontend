@@ -76,21 +76,21 @@
   "login": {
     "logout": "Log out",
     "login_required": "You need to log in",
-    "back": "Välj annan inloggningsmetod",
+    "back": "< Choose other way of logging in",
     "authenticator": {
       "facebook":{
-        "button": "Logga in med Facebook"
+        "button": "Log in with Facebook"
       },
       "email":{
-        "button": "Logga in med e-postadress..."
+        "button": "Log in with e-postadress..."
       },
       "anonymous": {
-        "button": "Logga in med tillfälligt anonymt konto..."
+        "button": "Log in with temporary profile..."
       }
     }
   },
   "login_email": {
-    "send_link": "Skicka inloggningslänk",
+    "send_link": "Send link",
     "sending_link": "We're sending a link to you...",
     "check_inbox": {
       "sentence": "{strong_1} to find the mail we just sent you. {strong_2} to log in.",
@@ -112,6 +112,15 @@
     "input_field": {
       "placeholder": "Your email address"
     }
+  },
+  "login_anonymous": {
+    "logged_in": "You are logged in",
+    "logging_in":  "You are logging in...",
+    "limitations_intro": "A temporary anonymous profile has the same features as a regular account but with some limitations:",
+    "limitation_1": "the profile only work on this phone/computer",
+    "limitation_2": "the profile does not work in \"incognito mode\"",
+    "limitation_3": "the profile stops working after 30 days of inactivity",
+    "button_label": "Log in anonymously"
   },
   "explore": {
     "input_field_name": {
@@ -200,7 +209,8 @@
         "out_of": "{value} out of {interval}"
       }
     },
-    "login_message": "You must log in to vote."
+    "login_message": "You must log in to vote.",
+    "login_cancel": "Cancel"
   },
   "perform_action": {
     "success_add_relationship": "You can now see each others favourites.",

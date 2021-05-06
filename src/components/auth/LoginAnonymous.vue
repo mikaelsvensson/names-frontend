@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="isLoading">
-      <p>{{ $t('login_email.sending_link') }}</p>
+      <p>{{ $t('login_anonymous.logging_in') }}</p>
       <b-skeleton
         width="100%"
         animated
@@ -15,26 +15,25 @@
         v-if="isSuccess"
         class="content"
       >
-        Du är inloggad
+        {{ $t('login_anonymous.logged_in') }}
       </div>
     </div>
     <div v-if="!isLoading">
       <div class="content">
         <p>
-          Ett tillfälligt anonymt konto har samma funktioner som ett vanligt konto men med vissa
-          begränsningar:
+          {{ $t('login_anonymous.limitations_intro') }}
         </p>
         <ul>
-          <li>kontot fungerar bara på denna mobil eller dator</li>
-          <li>kontot fungerar inte om du surfar i "inkognito-läge"</li>
-          <li>kontot slutar fungera efter 30 dagar av inaktivitet</li>
+          <li>{{ $t('login_anonymous.limitation_1') }}</li>
+          <li>{{ $t('login_anonymous.limitation_2') }}</li>
+          <li>{{ $t('login_anonymous.limitation_3') }}</li>
         </ul>
       </div>
       <b-button
         @click="startAuth()"
         type="is-primary"
       >
-        Logga in anonymt
+        {{ $t('login_anonymous.button_label') }}
       </b-button>
     </div>
   </div>

@@ -72,12 +72,6 @@
         </div>
       </div>
     </div>
-    <div v-if="showLoginForm">
-      <Login
-        :show-logout="false"
-        :message="$t('list_item.login_message')"
-      />
-    </div>
     <b-modal
       v-model="showLoginForm"
       :width="500"
@@ -91,7 +85,7 @@
           />
           <div class="mt-4">
             <a @click="showLoginForm = false">
-              Avbryt
+              {{ $t('list_item.login_cancel') }}
             </a>
           </div>
         </div>
