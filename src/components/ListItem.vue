@@ -78,6 +78,25 @@
         :message="$t('list_item.login_message')"
       />
     </div>
+    <b-modal
+      v-model="showLoginForm"
+      :width="500"
+      scroll="keep"
+    >
+      <div class="box-wrapper">
+        <div class="box">
+          <Login
+            :show-logout="false"
+            :message="$t('list_item.login_message')"
+          />
+          <div class="mt-4">
+            <a @click="showLoginForm = false">
+              Avbryt
+            </a>
+          </div>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -236,5 +255,9 @@ export default {
 
     span.count {
         font-style: italic;
+    }
+
+    .box-wrapper {
+      margin: 10px;
     }
 </style>

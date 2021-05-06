@@ -43,26 +43,9 @@
       </Notification>
     </div>
     <div v-if="!isLoading">
-      <b-field>
-        <b-input
-          v-model="emailAddress"
-          :placeholder="$t('login_email.input_field.placeholder')"
-          expanded
-        />
-      </b-field>
-
-      <div class="control">
-        <b-button
-          @click="startAuth()"
-          type="is-primary"
-        >
-          {{ $t('login_email.send_link') }}
-        </b-button>
-      </div>
-
       <div
         v-if="isInitial"
-        class="content my-4"
+        class="content mb-4"
       >
         <i18n
           path="login_email.instructions.sentence"
@@ -79,6 +62,23 @@
             />
           </template>
         </i18n>
+      </div>
+
+      <b-field>
+        <b-input
+          v-model="emailAddress"
+          :placeholder="$t('login_email.input_field.placeholder')"
+          expanded
+        />
+      </b-field>
+
+      <div class="control">
+        <b-button
+          @click="startAuth()"
+          type="is-primary"
+        >
+          {{ $t('login_email.send_link') }}
+        </b-button>
       </div>
     </div>
   </div>

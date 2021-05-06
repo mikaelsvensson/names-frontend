@@ -70,30 +70,32 @@
       :width="300"
       scroll="keep"
     >
-      <div class="box">
-        <div class="content">
-          <h2 class="subtitle">
-            {{ $t('profile.delete_account.confirmation.title') }}
-          </h2>
-          <p>
-            {{ $t('profile.delete_account.confirmation.confirmation') }}
-          </p>
-        </div>
-        <div class="buttons">
-          <button
-            type="button"
-            class="button is-danger"
-            @click="deleteProfile()"
-          >
-            {{ $t('profile.delete_account.confirmation.button_confirm') }}
-          </button>
-          <button
-            type="button"
-            class="button"
-            @click="isConfirmDeleteChecked = false"
-          >
-            {{ $t('profile.delete_account.confirmation.button_cancel') }}
-          </button>
+      <div class="box-wrapper">
+        <div class="box">
+          <div class="content">
+            <h2 class="subtitle">
+              {{ $t('profile.delete_account.confirmation.title') }}
+            </h2>
+            <p>
+              {{ $t('profile.delete_account.confirmation.confirmation') }}
+            </p>
+          </div>
+          <div class="buttons">
+            <button
+              type="button"
+              class="button is-danger"
+              @click="deleteProfile()"
+            >
+              {{ $t('profile.delete_account.confirmation.button_confirm') }}
+            </button>
+            <button
+              type="button"
+              class="button"
+              @click="isConfirmDeleteChecked = false"
+            >
+              {{ $t('profile.delete_account.confirmation.button_cancel') }}
+            </button>
+          </div>
         </div>
       </div>
     </b-modal>
@@ -187,4 +189,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+    .box-wrapper {
+        margin: 10px;
+    }
 </style>

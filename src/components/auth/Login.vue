@@ -5,7 +5,7 @@
     >
       <div
         v-if="translatedMessage"
-        class="mb-2 message-root"
+        class="mb-4 message-root"
       >
         <div class="message-icon">
           <font-awesome-icon
@@ -21,7 +21,7 @@
         <button
           v-for="conf in components"
           :key="conf.componentName"
-          class="button is-medium is-fullwidth"
+          class="button is-fullwidth"
           @click="selectedAuthenticator = conf"
         >
           <span class="icon">
@@ -29,7 +29,12 @@
               :icon="conf.icon"
             />
           </span>
-          <span>{{ $t('login.authenticator.' + conf.authenticator.toLowerCase() + '.button') }}</span>
+          <span class="button-label">{{ $t('login.authenticator.' + conf.authenticator.toLowerCase() + '.button') }}</span>
+          <span class="icon">
+            <font-awesome-icon
+              :icon="['fas', 'angle-right']"
+            />
+          </span>
         </button>
       </div>
     </div>
@@ -135,6 +140,10 @@ export default {
     .message-content {
         flex: 1;
         padding: 5px 0 0 15px;
+    }
+    .buttons button span.button-label {
+        flex: 1;
+        text-align: start;
     }
     .buttons button {
         justify-content: start;

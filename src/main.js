@@ -59,7 +59,8 @@ library.add(
     faSolid.faEnvelope,
     faSolid.faUserNinja,
     fabRegular.faFacebook,
-    faSolid.faDoorOpen
+    faSolid.faDoorOpen,
+    faSolid.faAngleRight
 )
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
